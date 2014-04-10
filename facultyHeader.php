@@ -5,7 +5,9 @@
    /
    <a href="facultyCourseEdit.php">Course Editor</a>
    /
-   <a href="facultyCourseList.php">Course List</a>
+   <a href="facultyTAEdit.php">TA Editor</a>
+   /
+   <a href="facultyCourseView.php">Course View</a>
   </nav>
   <nav style="float: right; margin: 0;">
    <a href="facultyHome.php">Home</a>

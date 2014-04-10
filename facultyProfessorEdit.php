@@ -157,7 +157,7 @@ joiningYear , loadPreference ) VALUES ('$_POST[rNumber]','$_POST[lastName]','$_P
       <tr>
        <td>Joining Year</td>
        <td>
-        <input type="text" name="joiningYear" value="<?php echo date( "Y" ); ?>" regex="[0-9]{4}" onchange="checkJoiningYear();" style="color: #000000;" required>
+        <input type="text" name="joiningYear" value="<?php echo date( "Y" ); ?>" onchange="checkJoiningYear();" style="color: #000000;" required>
        </td>
       </tr>
       <tr>
@@ -176,6 +176,8 @@ joiningYear , loadPreference ) VALUES ('$_POST[rNumber]','$_POST[lastName]','$_P
 </html>
 
 <!-- JavaScript gives more control over real-time value checking -->
+<script src="js/util.js"></script>
+
 <script>
 function checkRNumber()
 {
@@ -189,18 +191,18 @@ function checkRNumber()
 
 function checkLastName()
 {
-	// Ensure no spaces
 	var element = document.getElementsByName( "lastName" )[ 0 ];
-	var valid = element.value.length && !element.value.match( /\s/g );
+	element.value = mysql_real_escape_string( element.value );
+	var valid = element.value.length; // && !element.value.match( /\s/g );
 	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
 	return valid;
 }
 
 function checkFirstName()
 {
-	// Ensure no spaces
 	var element = document.getElementsByName( "firstName" )[ 0 ];
-	var valid = element.value.length && !element.value.match( /\s/g );
+	element.value = mysql_real_escape_string( element.value );
+	var valid = element.value.length; // && !element.value.match( /\s/g );
 	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
 	return valid;
 }
@@ -218,9 +220,12 @@ function checkJoiningSemester()
 
 function checkJoiningYear()
 {
-	// Ensure only strings of four digits between 1920 and 3000
+	// 1920 < year < 3000
 	var element = document.getElementsByName( "joiningYear" )[ 0 ];
-	var valid = element.value - 0 && element.value.match( /^[0-9]{1,4}$/g );
+	var value = element.value - 0;
+	var valid = value > 1920 && value < 3000;
+	if( valid )
+		element.value = value;
 	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
 	return valid;
 }
