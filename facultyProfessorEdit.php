@@ -183,8 +183,9 @@ function checkRNumber()
 {
 	// Ensure numbers greater than zero
 	var element = document.getElementsByName( "rNumber" )[ 0 ];
-	// !!( element.value - 0 )
-	var valid = element.value.match( /^\+?0*[1-9][0-9]*$/g );
+	var value = Math.floor( element.value - 0 );
+	element.value = !value || isNaN( value ) ? "" : value;
+	var valid = value > 0;
 	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
 	return valid;
 }
