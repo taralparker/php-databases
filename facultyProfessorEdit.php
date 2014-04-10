@@ -1,10 +1,12 @@
+<!-- Check if the user is allowed to access this page -->
 <?php
-	$checkSessionType = "Faculty";
+	$pageSessionType = "faculty";
 	include "sessionValidator.php";
 	include "databaseSettings.php";
 ?>
 
 <html>
+ <!-- Page settings -->
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Instructor Edit</title>
@@ -12,6 +14,7 @@
  </head>
 
  <body>
+  <!-- Texas Tech banner -->
   <div id="container">
    <div id="masthead">
     <div id="logo"></div>
@@ -19,7 +22,7 @@
    </div>
 
 <!-- This contains the link list at the top of the page -->
-<?php include "facultyHeader.php"; ?>
+<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
 
    <div align="center">
    <br>
@@ -33,8 +36,6 @@
 		// If the page was submitted with an update request, do so
 		if( !empty( $_POST ) )
 		{
-			//printf( "%s<br>" , $_POST[ "tenured" ] );
-
 			if( !empty( $_POST[ "rNumber" ] ) && !empty( $_POST[ "lastName" ] ) && !empty( $_POST[ "firstName" ] ) && !empty( $_POST[ "tenured" ] ) && !empty( $_POST[ "joiningSemester" ] ) && !empty( $_POST[ "joiningYear" ] ) )
 			{
 				$tenu = $_POST[ "tenured" ] === "Y" ? 1 : 0;
@@ -226,6 +227,7 @@ function checkJoiningYear()
 
 function checkAll()
 {
+	// If all constrained values are valid, submit the form for addition into the database
 	if( checkRNumber() && checkLastName() && checkFirstName() && checkJoiningSemester() && checkJoiningYear() )
 		document.getElementsByName( "instructorForm" )[ 0 ].submit();
 }

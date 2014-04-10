@@ -1,6 +1,6 @@
 <?php
-	// Change this to "Faculty", "Instructor", or "Business"
-	$checkSessionType = "Instructor";
+	// Change this to "faculty", "instructor", or "business"
+	$pageSessionType = "instructor";
 	include "sessionValidator.php";
 	// Include this for global database access variables
 	//include "databaseSettings.php";
@@ -20,6 +20,8 @@
     <div id="logo"></div>
     <div id="title"></div>
    </div>
+
+<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
 
    <!-- Do stuff here -->
 

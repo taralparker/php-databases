@@ -1,5 +1,5 @@
 <?php
-	$checkSessionType = "Instructor";
+	$pageSessionType = "instructor";
 	include "sessionValidator.php";
 ?>
 
@@ -25,7 +25,7 @@
     <div id="title"></div>
    </div>
 
-<?php include "instructorHeader.php"; ?>
+<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
 
    <br>
    <form align="center" name="dateForm" action="instructorHome.php" method="post">

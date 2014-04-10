@@ -9,9 +9,9 @@
 	}
 	else
 	{
-		if( $_SESSION[ "type" ] != $checkSessionType )
+		if( strcasecmp( $_SESSION[ "type" ] , $pageSessionType ) )
 		{
-			unset( $checkSessionType );
+			unset( $pageSessionType );
 			//header( "HTTP/1.0 401 Unauthorized" );
 			//header( "Location: index.php" );
 			exit();
@@ -23,6 +23,6 @@
 		}
 		*/
 		
-		unset( $checkSessionType );
+		// unset( $pageSessionType );
 	}
 ?>
