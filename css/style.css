@@ -1,0 +1,203 @@
+/*
+ * examples/full/css/demo.css
+ *
+ * This file is part of EditableGrid.
+ * http://editablegrid.net
+ *
+ * Copyright (c) 2011 Webismymind SPRL
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://editablegrid.net/license
+ */
+
+/* Some of this has also been copied from the official TTU CSS files */
+
+/* Primary items */
+
+#container {
+	width: 900px;
+	float:none;
+	display:block;
+	/* height: 100%; */
+	/* height: 100%; */
+	margin: 0px auto;
+	padding: 0 11px;
+	background: url( '/images/gradient.gif') repeat-y left top;
+}
+
+#masthead {
+	position: relative;
+	border-bottom: 10px solid #fff;
+	height: 100px !important;
+	width: 900px;
+	background: #000 url( "/images/masthead.jpg" ) no-repeat left top;
+}
+
+#masthead div#logo {
+	position: absolute;
+	left: 19px;
+	top: 19px;
+	width: 53px;
+	height: 62px;
+	background: url( "/images/logo.gif" ) no-repeat left top;
+}
+
+#masthead div#title {
+	position: absolute;
+	left: 85px;
+	top: 0px;
+	width: 488px;
+	height: 92px;
+	background: url( "/images/title_ttu.gif" ) no-repeat left top;
+}
+
+
+
+header {
+	background-color: #FFFFFF;
+}
+
+body {
+	margin: 0;
+	background-color: #990000;
+	background: #900 url( "/images/gradient.gif" ) repeat-y center top;
+}
+
+/* body */
+table.testgrid {
+	font-family:'lucida grande', tahoma, verdana, arial, sans-serif;
+	font-size:11px;
+}
+
+h1 {
+	font-size: 15px;
+}
+
+h2 {
+	font-size: 13px;
+}
+
+h1 a {
+	font-size: 12px;
+	float: right;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+img {
+	border: 0;
+}
+
+.ok {
+	background-color: #0a8819;
+	color: white;
+	padding: 5px;
+}
+
+input.invalid {
+	background: red;
+	color: #FDFDFD;
+}
+
+#message {
+	width: 100%;
+}
+
+td.number {
+	text-align: right;
+	font-weight: bold;
+	padding-right: 5px;
+	white-space: nowrap;
+}
+
+td.hours {
+	text-align: right;
+}
+
+td.boolean {
+	text-align: center;
+}
+
+th.boolean {
+	text-align: center;
+}
+
+table.testgrid {
+	background-color: #FFFFFF;
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+	border: 1px solid #CCB;
+	min-width: 50%;
+}
+
+table.testgrid tr {
+	height: 30;
+	border-bottom: 1px solid #DDD;
+}
+
+table.testgrid>tbody tr:hover {
+	background-color: #888888;
+	color: white;
+}
+
+table.testgrid>tbody tr:hover a {
+	color: white;
+}
+
+table.testgrid a {
+	color: #548dc4;
+	text-decoration: none;
+}
+
+table.testgrid th {
+	background: #E5E5E5;
+	border: 1px solid #D5D5D5;
+	color: #555;
+	text-align: left;
+	padding-left: 5px;
+	padding-right: 0px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	white-space: nowrap;
+}
+
+table.testgrid td {
+	padding: 5px;
+	border: 1px solid #E0E0E0;
+}
+
+#edition {
+	padding-top: 5px;
+	width: 600px;
+	border: 0px;
+}
+
+#paginator {
+	font-family:  Helvetica, Arial, sans-serif;
+  	margin: 10px 0;
+	font-size: 12px;
+	text-align: center;
+	margin-bottom: 5px;
+}
+
+#paginator a { color:  #0078cc; text-decoration: none; font-size: 12px; }
+#paginator a:hover { color: #000; }
+#paginator a:active { color: #777; }
+#paginator a:focus { outline: 1px; }
+
+#filter {
+	width: 250px;
+	margin-bottom: 10px;
+}
+
+#wrap {
+	margin: 10px;
+}
+
+
+#pagecontrol {
+	padding-bottom: 5px;
+	float: right;
+}
