@@ -1,6 +1,7 @@
 <?php
 	$pageSessionType = "instructor";
 	include "sessionValidator.php";
+	include "databaseSettings.php";
 ?>
 
 <html>
@@ -19,17 +20,24 @@
 ?>
 
  <body>
-  <div id="container">
-   <div id="masthead">
-    <div id="logo"></div>
-    <div id="title"></div>
-   </div>
+  <table id="bodyTable" align="center">
+   <tr>
+    <td id="bodyTableLeft">
+    </td>
+    <td id="bodyTableMiddle" valign="top">
+     <div id="masthead">
+      <div id="logo"></div>
+      <div id="title"></div>
+     </div>
 
-<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
+<?php include $pageSessionType."Sidebar.html"; ?>
 
-   <br>
-   <form align="center" name="dateForm" action="instructorHome.php" method="post">
-    <select name="demoSemester">
+     <!-- Page contents -->
+     <div id="content" align="center">
+
+      <br>
+      <form align="center" name="dateForm" action="<?php echo $_SERVER[ 'PHP_SELF' ]; ?>" method="post">
+       <select name="demoSemester">
 
 <?php
 	$semesters = array( "Fall" , "Spring" , "Summer I" , "Summer II" );
@@ -37,17 +45,22 @@
 		echo "<option value='$semesters[$index]' ". ( $semesters[ "$index" ] == $_SESSION[ "demoSemester" ] ? "selected" : "" ) .">$semesters[$index]</option>";
 ?>
 
-    </select>
-    <select name="demoYear">
+       </select>
+       <select name="demoYear">
 
 <?php
 	for( $year = 2009 ; $year < 2015 ; $year++ )
 		echo "<option value='$year' ". ( $year == $_SESSION[ "demoYear" ] ? "selected" : "" ) .">$year</option>";
 ?>
 
-    </select>
-    <input type="submit" value="Set">
-   </form>
-  </div>
+       </select>
+       <input type="submit" value="Set">
+      </form>
+     </div>
+    </td>
+    <td id="bodyTableRight">
+    </td>
+   </tr>
+  </table>
  </body>
 </html>

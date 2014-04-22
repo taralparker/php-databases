@@ -1,4 +1,3 @@
-<!-- Check if the user is allowed to access this page -->
 <?php
 	$pageSessionType = "faculty";
 	include "sessionValidator.php";
@@ -6,56 +5,36 @@
 ?>
 
 <html>
- <!-- Page settings -->
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Instructor Edit</title>
+  <title>Professor Editor</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
  </head>
 
  <body>
-  <!-- Texas Tech banner -->
-  <div id="container">
-   <div id="masthead">
-    <div id="logo"></div>
-    <div id="title"></div>
-   </div>
+  <table id="bodyTable" align="center">
+   <tr>
+    <td id="bodyTableLeft">
+    </td>
+    <td id="bodyTableMiddle" valign="top">
+     <div id="masthead">
+      <div id="logo"></div>
+      <div id="title"></div>
+     </div>
 
-<!-- This contains the link list at the top of the page -->
-<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
+<?php include $pageSessionType."Sidebar.html"; ?>
 
-   <div align="center">
-   <br>
+     <!-- Page contents -->
+     <div id="content" align="center">
 
-<!-- Generate the table with PHP -->
 <?php
- 	$mysqli = new mysqli( $dbproHost , $dbproUsername , $dbproPassword , $dbproSchema );
+	$mysqli = new mysqli( $dbproHost , $dbproUsername , $dbproPassword , $dbproSchema );
 
 	if( !$mysqli->connect_errno )
 	{
-		// If the page was submitted with an update request, do so
-		if( !empty( $_POST ) )
-		{
-			if( !empty( $_POST[ "rNumber" ] ) && !empty( $_POST[ "lastName" ] ) && !empty( $_POST[ "firstName" ] ) && !empty( $_POST[ "tenured" ] ) && !empty( $_POST[ "joiningSemester" ] ) && !empty( $_POST[ "joiningYear" ] ) )
-			{
-				$tenu = $_POST[ "tenured" ] === "Y" ? 1 : 0;
-				$sql = "INSERT INTO instructors( rNumber , lastName , firstName , instructorTitle , tenured , joiningSemester ,
-joiningYear , loadPreference ) VALUES ('$_POST[rNumber]','$_POST[lastName]','$_POST[firstName]','$_POST[instructorTitle]',$tenu,'$_POST[joiningSemester]',$_POST[joiningYear], NULL )";
-				//printf( "%s<br>" , $sql );
-
-				if( $mysqli->query( $sql ) )
-					printf( "Insertion complete.<br>" );
-				else
-					printf( "Insertion failed: %s<br>" , $mysqli->error );
-			}
-			else
-				printf( "One or more required fields are blank." );
-		}
-
-		// Start making the table
 		if( $result = $mysqli->query( "SELECT * FROM instructors;" ) )
 		{
-			echo "<table border='1'>
+			echo "<table border='1' id='htmlgrid' class='testgrid' style='font-size:11px;'>
 			<tr>
 			<th>RNumber</th>
 			<th>Last Name</th>
@@ -67,15 +46,14 @@ joiningYear , loadPreference ) VALUES ('$_POST[rNumber]','$_POST[lastName]','$_P
 			</tr>";
 			//<th>Load Preference</th>
 
-			// Create each row
 			while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
 			{
-				echo "<tr>";
+				echo '<tr id="' . $row[ "rNumber" ] . '">';
 				echo "<td>" . $row[ "rNumber" ] . "</td>";
 				echo "<td>" . $row[ "lastName" ] . "</td>";
 				echo "<td>" . $row[ "firstName" ] . "</td>";
 				echo "<td>" . $row[ "instructorTitle" ] . "</td>";
-				echo "<td>" . ( $row[ "tenured" ] ? "Y" : "N" ) . "</td>";
+				echo "<td>" . $row[ "tenured" ] . "</td>";
 				echo "<td>" . $row[ "joiningSemester" ] . "</td>";
 				echo "<td>" . $row[ "joiningYear" ] . "</td>";
 				//echo "<td>" . $row[ "loadPreference" ] . "</td>";
@@ -83,164 +61,51 @@ joiningYear , loadPreference ) VALUES ('$_POST[rNumber]','$_POST[lastName]','$_P
 			}
 
 			echo "</table>";
-
-			// Clean up
-			$result->close();
 		}
 
+		// Clean up
+		$result->close();
 		$mysqli->close();
 	}
 	else
 	{
-		// Bail out here
 		printf( "Connection failed: %s<br>" , $mysqli->connect_error );
 		exit();
 	}
 ?>
 
-   </div>
-
-   <br>
-   <br>
-
-   <!-- Make the form box -->
-   <div align="center">
-    <form name="instructorForm" action="facultyProfessorEdit.php" method="post">
-     <table border='1'>
-      <tr>
-       <td>RNumber</td>
-       <td>
-       <input type="text" name="rNumber" onchange="checkRNumber();" style="color: #000000;" required>
-       </td>
-      </tr>
-      <tr>
-       <td>Last Name</td>
-       <td>
-       <input type="text" name="lastName" onchange="checkLastName();" style="color: #000000;" required>
-       </td>
-      </tr>
-      <tr>
-       <td>First Name</td>
-       <td>
-       <input type="text" name="firstName" onchange="checkFirstName();" style="color: #000000;" required>
-       </td>
-      </tr>
-      <tr>
-       <td>Title</td>
-       <td>
-       <input type="text" name="instructorTitle" style="color: #000000;">
-       </td>
-      </tr>
-      <tr>
-       <td>Tenured</td>
-       <td>
-        <input type="radio" name="tenured" value="N" checked="true">No
-        <input type="radio" name="tenured" value="Y">Yes
-       </td>
-      </tr>
-      <tr>
-       <td>Joining Semester</td>
-       <td>
-       <!--
-       <input type="text" name="joiningSemester" list="semester" onchange="checkJoiningSemester();" style="color: #000000;" required>
-       <datalist id="semester">
-       -->
-        <select name="joiningSemester">
-         <!-- <option value=""></option> -->
-         <option value="Spring">Spring</option>
-         <option value="Summer I">Summer I</option>
-         <option value="Summer II">Summer II</option>
-         <option value="Fall">Fall</option>
-        </select>
-       </td>
-      </tr>
-      <tr>
-       <td>Joining Year</td>
-       <td>
-        <input type="text" name="joiningYear" value="<?php echo date( "Y" ); ?>" onchange="checkJoiningYear();" style="color: #000000;" required>
-       </td>
-      </tr>
-      <tr>
-       <td colspan="2">
-        <div align="center">
-         <!-- <input type="submit" value="Add"> -->
-         <input type="button" value="Add" onclick="checkAll();">
-        </div>
-       </td>
-      </tr>
-     </table>
-    </form>
-   </div>
-  </div>
+     </div>
+    </td>
+    <td id="bodyTableRight">
+    </td>
+   </tr>
+  </table>
  </body>
 </html>
 
-<!-- JavaScript gives more control over real-time value checking -->
-<script src="js/util.js"></script>
+<!-- JavaScript -->
+<script src="js/editablegrid-2.0.1.js"></script>
+<script src="js/jquery-1.7.2.min.js" ></script>
 
 <script>
-function checkRNumber()
+window.onload = function()
 {
-	// Ensure numbers greater than zero
-	var element = document.getElementsByName( "rNumber" )[ 0 ];
-	var value = Math.floor( element.value - 0 );
-	element.value = !value || isNaN( value ) ? "" : value;
-	var valid = value > 0;
-	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
-	return valid;
-}
+	editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
 
-function checkLastName()
-{
-	var element = document.getElementsByName( "lastName" )[ 0 ];
-	element.value = mysql_real_escape_string( element.value );
-	var valid = element.value.length; // && !element.value.match( /\s/g );
-	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
-	return valid;
-}
+	// Build and load the metadata in JS
+	editableGrid.load(
+		{ metadata: [
+			{ name: "rNumber", datatype: "string", editable: false },
+			{ name: "lastName", datatype: "string", editable: false },
+			{ name: "firstName", datatype: "string", editable: false },
+			{ name: "title", datatype: "string", editable: false },
+			{ name: "tenured", datatype: "boolean", editable: false },
+			{ name: "joiningSemester", datatype: "string", editable: false },
+			{ name: "joiningYear", datatype: "number", editable: false }
+	] } );
 
-function checkFirstName()
-{
-	var element = document.getElementsByName( "firstName" )[ 0 ];
-	element.value = mysql_real_escape_string( element.value );
-	var valid = element.value.length; // && !element.value.match( /\s/g );
-	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
-	return valid;
+	// Attach to the HTML table and render
+	editableGrid.attachToHTMLTable( "htmlgrid" );
+	editableGrid.renderGrid();
 }
-
-function checkJoiningSemester()
-{
-	/*
-	var element = document.getElementsByName( "joiningSemester" )[ 0 ];
-	var valid = element.value.length;
-	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
-	return valid;
-	*/
-	return true;
-}
-
-function checkJoiningYear()
-{
-	// 1920 < year < 3000
-	var element = document.getElementsByName( "joiningYear" )[ 0 ];
-	var value = element.value - 0;
-	var valid = value > 1920 && value < 3000;
-	if( valid )
-		element.value = value;
-	element.style.backgroundColor = valid ? "#80FF80" : "#FF8080";
-	return valid;
-}
-
-function checkAll()
-{
-	// If all constrained values are valid, submit the form for addition into the database
-	if( checkRNumber() && checkLastName() && checkFirstName() && checkJoiningSemester() && checkJoiningYear() )
-		document.getElementsByName( "instructorForm" )[ 0 ].submit();
-}
-
-checkRNumber();
-checkLastName();
-checkFirstName();
-checkJoiningSemester();
-checkJoiningYear();
 </script>

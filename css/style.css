@@ -9,27 +9,22 @@
  * http://editablegrid.net/license
  */
 
-/* Some of this has also been copied from the official TTU CSS files */
+/*
+	From [del]Russia[/del] TTU With [del]Love[/del] Tweaks
+*/
 
-/* Primary items */
-
-#container {
-	width: 900px;
-	float:none;
-	display:block;
-	/* height: 100%; */
-	/* height: 100%; */
-	margin: 0px auto;
-	padding: 0 11px;
-	background: url( '/images/gradient.gif') repeat-y left top;
+html, body, div, p, form, input, select, textarea, fieldset {
+	font: 11px/15px Arial,Helvetica,Verdana,sans-serif;
+	color: #333;
 }
 
 #masthead {
 	position: relative;
 	border-bottom: 10px solid #fff;
 	height: 100px !important;
-	width: 900px;
-	background: #000 url( "/images/masthead.jpg" ) no-repeat left top;
+	min-width: 891;
+	width: auto;
+	background: #000 url( "/images/mastheadTileable.jpg" ) repeat-x left top;
 }
 
 #masthead div#logo {
@@ -50,7 +45,87 @@
 	background: url( "/images/title_ttu.gif" ) no-repeat left top;
 }
 
+#sideBar {
+	position: relative;
+	z-index: 1000;
+	float: left;
+	display: inline;
+	margin: 0 10;
+	width: 170px;
+	background: #fff;
+	background: #fff url( "/images/sidebarSeperator.gif" ) repeat-y top right;
+}
 
+#sideBar h3 {
+	line-height: 12px;
+	margin: 0;
+	padding: 10px 5px;
+	_float /**/:left;
+	width /**/:150px;
+
+	color: #666;
+	text-transform:capitalize;
+	letter-spacing:normal;
+	font-size: 15px;
+	font-weight: normal;
+	font-family: "Times New Roman", Times, serif;
+	background: none;
+	background: url( "/images/nav-border-horz.gif" ) repeat-x left bottom;
+}
+
+#sideBar ul {
+	margin: 0;
+	padding: 0;
+	_float/**/: left;
+	list-style: none;
+}
+
+#sideBar li,
+#sideBar li.more {
+	position: relative;
+	z-index: 1000;
+	color: #666;
+	padding: 5px 10px;
+	_float/**/: left;
+	width: 140px;
+	_width /**/:160px;
+}
+
+#sideBar li {
+	border-bottom: 1px dotted #ccc;
+}
+
+#sideBar li.more {
+	background: url( "/images/more-border-arrow.gif" ) no-repeat right top;
+}
+
+#sideBar li a {
+	color: #666;
+	display: block;
+	text-decoration: none;
+	width: 150px;
+	padding: 0;
+	_padding: 0 0 0 1px;
+	_margin: 0 0 0 -1px;
+}
+
+#sideBar li:hover,
+#sideBar li.over {
+	background: url( "/images/arrow-red.png" ) no-repeat left top;
+}
+
+#sideBar li.more:hover,
+#sideBar li.moreover {
+	color: #c00;
+	background: url( "images/more-border-arrow-over.gif" ) no-repeat right top;
+}
+
+#sideBar li:hover a,
+#sideBar li.over a,
+#sideBar li.more:hover a,
+#sideBar li.moreover a {
+	color: #c00;
+}
 
 header {
 	background-color: #FFFFFF;
@@ -58,11 +133,44 @@ header {
 
 body {
 	margin: 0;
+	padding: 0;
 	background-color: #990000;
-	background: #900 url( "/images/gradient.gif" ) repeat-y center top;
 }
 
-/* body */
+#bodyTable {
+	height: 100%;
+	border-collapse: collapse;
+}
+
+#bodyTableLeft {
+	margin: 0;
+	padding: 0;
+	width: 8;
+	background: url( '/images/gradientLeft.gif' ) repeat-y right top;
+}
+
+#bodyTableMiddle {
+	margin: 0;
+	padding: 0;
+	width: auto;
+	background-color: #FFFFFF;
+}
+
+#bodyTableRight {
+	margin: 0;
+	padding: 0;
+	width: 8;
+	background: url( '/images/gradientRight.gif' ) repeat-y left top;
+}
+
+#content {
+	margin-bottom: 10;
+}
+
+/*
+	JavaScript Table CSS
+*/
+
 table.testgrid {
 	font-family:'lucida grande', tahoma, verdana, arial, sans-serif;
 	font-size:11px;
@@ -157,7 +265,7 @@ table.testgrid th {
 	color: #555;
 	text-align: left;
 	padding-left: 5px;
-	padding-right: 0px;
+	padding-right: 5px;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	white-space: nowrap;
