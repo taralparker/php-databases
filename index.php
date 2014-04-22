@@ -6,63 +6,52 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Database Project</title>
+  <title>Template</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
  </head>
+
  <body>
-  <div id="container">
-   <div id="masthead">
-    <div id="logo"></div>
-    <div id="title"></div>
-   </div>
+  <table id="bodyTable" align="center">
+   <tr>
+    <td id="bodyTableLeft">
+    </td>
+    <td id="bodyTableMiddle" valign="top">
+     <div id="masthead">
+      <div id="logo"></div>
+      <div id="title"></div>
+     </div>
+
+<?php include $pageSessionType."Sidebar.html"; ?>
+
+     <!-- Page contents -->
+     <div id="content" align="center">
 
 <?php
 	for( $index = 0 ; $index < 5 ; $index++ )
 		echo "<br>";
 ?>
-
-  <div style="background-color: #FFFFFF;" align="center">
-   <form action="index.php" method="post">
-    <table>
-     <!--
-     <tr>
-      <div align="center">
-       DBPro
-      </div>
-     </tr>
-     -->
-     <tr>
-      <table border="1">
-       <tr>
-        <td>
-         RNumber
-        </td>
-        <td>
-         <input name="rNumber" type="text">
-        </td>
-       </tr>
-       <tr>
-        <td>
-         Password
-        </td>
-        <td>
-         <input name="password" type="password">
-        </td>
-       </tr>
-      </table>
-     </tr>
-     <tr>
-      <br>
-      <td colspan="2">
-       <div align="center">
-        <input name="submit" type="submit" value="Login">
-       </div>
-      <td>
-     </tr>
-    </table>
-   </form>
-  </div>
- </div>
+      <form action="index.php" method="post">
+       <table border="1">
+        <tr>
+         <td>
+          RNumber
+         </td>
+         <td>
+          <input name="rNumber" type="text">
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Password
+         </td>
+         <td>
+          <input name="password" type="password">
+         </td>
+        </tr>
+       </table>
+       <br>
+       <input name="submit" type="submit" value="Login">
+      </form>
 
 <?php
 	if( isset( $_POST[ "submit" ] , $_POST[ "rNumber" ] , $_POST[ "password" ] ) )
@@ -77,7 +66,7 @@
 			{
 				$pass = hash( "sha256" , $_POST[ "password" ] );
 
-				$sql = "SELECT * FROM accounts WHERE rNumber=$rNum AND password='$pass' LIMIT 1";
+				$sql = "SELECT * FROM accounts WHERE rNumber=$rNum AND password='$pass' LIMIT 1;";
 
 				if( $result = $mysqli->query( $sql ) )
 				{
@@ -114,5 +103,11 @@
 	}
 ?>
 
+     </div>
+    </td>
+    <td id="bodyTableRight">
+    </td>
+   </tr>
+  </table>
  </body>
 </html>

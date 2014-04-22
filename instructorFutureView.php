@@ -7,7 +7,7 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Test</title>
+  <title>Future View</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
  </head>
 
