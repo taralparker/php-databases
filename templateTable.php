@@ -1,32 +1,35 @@
 <?php
 	// Change this to "faculty", "instructor", or "business"
-	$pageSessionType = "instructor";
+	$pageSessionType = "faculty";
 	include "sessionValidator.php";
-	// Include this for global database access variables
 	include "databaseSettings.php";
 ?>
 
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <!-- Set page title here -->
-  <title>Template Page</title>
+  <title>Template</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
  </head>
 
  <body>
-  <div id="container">
-   <div id="masthead">
-    <div id="logo"></div>
-    <div id="title"></div>
-   </div>
+  <table id="bodyTable" align="center">
+   <tr>
+    <td id="bodyTableLeft">
+    </td>
+    <td id="bodyTableMiddle" valign="top">
+     <div id="masthead">
+      <div id="logo"></div>
+      <div id="title"></div>
+     </div>
 
-<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
+<?php include $pageSessionType."Sidebar.html"; ?>
 
-   <br>
+     <!-- Page contents -->
+     <div id="content" align="center">
 
 <?php
- 	$mysqli = new mysqli( $dbproHost , $dbproUsername , $dbproPassword , $dbproSchema );
+	$mysqli = new mysqli( $dbproHost , $dbproUsername , $dbproPassword , $dbproSchema );
 
 	if( !$mysqli->connect_errno )
 	{
@@ -63,6 +66,11 @@
 		echo "<div align='center'>Unable to connect to database.</div>";
 ?>
 
-  </div>
+     </div>
+    </td>
+    <td id="bodyTableRight">
+    </td>
+   </tr>
+  </table>
  </body>
 </html>
