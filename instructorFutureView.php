@@ -7,33 +7,25 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Future Classes</title>
-  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+  <title>Test</title>
+  <link rel="stylesheet" href="css/styleTest.css" type="text/css" media="screen">
  </head>
 
  <body>
- <div id="container">
-  <div id="masthead">
-   <div id="logo"></div>
-   <div id="title"></div>
-  </div>
+  <table id="bodyTable" align="center">
+   <tr>
+    <td id="bodyTableLeft">
+    </td>
+    <td id="bodyTableMiddle" valign="top">
+     <div id="masthead">
+      <div id="logo"></div>
+      <div id="title"></div>
+     </div>
 
-<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
+<?php include $pageSessionType."Sidebar.html"; ?>
 
-  <br>
-
- <!--
- <div id="wrap">
-  <!-- Feedback message zone -- >
-  <div id="message"></div>
-
-  <!-- Grid contents -- >
-  <div id="tablecontent"></div>
-
-  <!-- Paginator control -- >
-  <div id="paginator"></div>
- </div>
- -->
+     <!-- Page contents -->
+     <div id="content" align="center">
 
 <?php
  	$mysqli = new mysqli( $dbproHost , $dbproUsername , $dbproPassword , $dbproSchema );
@@ -95,7 +87,12 @@
 		printf( "Connection failed: %s<br>" , $mysqli->connect_error );
 ?>
 
-  </div>
+     </div>
+    </td>
+    <td id="bodyTableRight">
+    </td>
+   </tr>
+  </table>
  </body>
 </html>
 
