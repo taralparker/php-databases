@@ -2,28 +2,45 @@
 	// Change this to "faculty", "instructor", or "business"
 	$pageSessionType = "faculty";
 	include "sessionValidator.php";
-	// Include this for global database access variables
 	include "databaseSettings.php";
 ?>
 
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <!-- Set page title here -->
-  <title>TA Edit</title>
+  <title>Edit TAs</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
+  <script language="JavaScript">
+    function toggle(id)
+	{
+        var state = document.getElementById(id).style.display;
+		if (state == 'block')
+		{
+			document.getElementById(id).style.display = 'none';
+		}
+		else
+		{
+			document.getElementById(id).style.display = 'block';
+		}
+    }
+</script>
  </head>
 
  <body>
-  <div id="container">
-   <div id="masthead">
-    <div id="logo"></div>
-    <div id="title"></div>
-   </div>
+  <table id="bodyTable" align="center">
+   <tr>
+    <td id="bodyTableLeft">
+    </td>
+    <td id="bodyTableMiddle" valign="top">
+     <div id="masthead">
+      <div id="logo"></div>
+      <div id="title"></div>
+     </div>
 
-<?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
+<?php include $pageSessionType."Sidebar.html"; ?>
 
-   <br>
+     <!-- Page contents -->
+     <div id="content" align="center">
 
 <?php
 	function convertTime($time)
@@ -46,21 +63,15 @@
 		order by courseCode;"))
 		{
 			echo "<form name=\"courseSelectionForm\" action=\"facultyTAEdit.php\" method=\"POST\">
-				<select name=\"courseSelect\" id=\"courseSelect\" onchange=\"this.form.submit();\">
-						";
-			$selectedCourse = "";
-			if( !empty( $_POST ) && !empty( $_POST[ "courseSelect" ]))
-			{
-				$selectedCourse = $_POST[ "courseSelect"];	
-			}
-			else
+				<select size=\"7\"name=\"courseSelect[]\" multiple=\"yes\" id=\"courseSelect\" onchange=\"this.form.submit();\">";
+			if( empty( $_POST ) || empty( $_POST[ "courseSelect" ]))
 			{
 				echo "<option selected=\"selected\">Select a course</option>";
 			}
 			while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
 			{
-				$selected = $row[ "courseCode" ] == $selectedCourse;
-				echo "<option " . ($selected ? "selected=\"selected\"" : "") . "value=\"" . $row[ "courseCode" ] . "\">" . $row[ "courseCode" ] . "</option>";
+				$selected = in_array($row[ "courseCode" ], $_POST[ "courseSelect" ]);
+				echo "<option " . ($selected ? "selected=\"selected\"" : "") . "value=\"$row[courseCode] \">CS $row[courseCode] </option>";
 			}
 			echo "</select></form>";
 		}
@@ -70,55 +81,60 @@
 			echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
 		}
 		
+		echo "<h2>Teaching assistants for $semester $year</h2>";
+		
 	
-	
-		$sql = "
-		select * from
-		Sections natural left outer join hasTA natural left outer join TAs
-		where Sections.CRN in
-		(select CRN from consistsOf
-		where courseCode=$_POST[courseSelect] and year=$year and semester='$semester') and Sections.year=$year and Sections.semester='$semester'";
 
 		if( !empty( $_POST ) && !empty( $_POST[ "courseSelect" ]))
 		{
-			if( $result = $mysqli->query( $sql ) )
+			foreach ($_POST[ "courseSelect" ] as $course)
 			{
-				echo "<p>Teaching assistants for CS " . $_POST[ "courseSelect" ] . " during " . $semester . " " . $year . ".</p>";
-				echo "<table border='1' id='htmlgrid' class='testgrid'>
-				<tr>
-				<th>CRN</th>
-				<th>Section</th>
-				<th>Type</th>
-				<th>Days</th>
-				<th>Start Time</th>
-				<th>End Time</th>
-				<th>TA Name</th>
-				<th>RNumber</th>
-				<th>Hours/Week</th>
-				</tr>";
-
-				while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
+				//echo "<h1><a name=\"$course\" href=\"#$course\" onclick=\"toggle('$course');\">CS $course</a></h1><div class='courseDiv' id='$course'>";
+				echo "<h1>CS $course</h1><div class='courseDiv' id='$course'>";
+				$sql = "
+				select * from
+				Sections natural left outer join hasTA natural left outer join TAs
+				where Sections.CRN in
+				(select CRN from consistsOf
+				where courseCode=$course and year=$year and semester='$semester') and Sections.year=$year and Sections.semester='$semester'";
+				if( $result = $mysqli->query( $sql ) )
 				{
-					echo "<tr>";
-					echo "<td>" . $row[ "CRN" ] . "</td>";
-					echo "<td>" . $row[ "sectionNumber" ] . "</td>";
-					echo "<td>" . $row[ "type" ] . "</td>";
-					echo "<td>" . $row[ "days" ] . "</td>";
-					echo "<td>" . convertTime($row[ "startTime" ]) . "</td>";
-					echo "<td>" . convertTime($row[ "endTime" ]) . "</td>";
-					echo "<td>" . $row[ "firstName" ] . " " . $row[ "lastName" ] . "</td>";		
-					echo "<td>" . $row[ "rNumber" ] . "</td>";
-					echo "<td>" . $row[ "hoursPerWeek" ] . "</td>";
-					echo "</tr>";
-				}
+					echo "<table border='1' id='htmlgrid' class='testgrid'>
+					<tr>
+					<th>CRN</th>
+					<th>Section</th>
+					<th>Type</th>
+					<th>Days</th>
+					<th>Start Time</th>
+					<th>End Time</th>
+					<th>TA Name</th>
+					<th>RNumber</th>
+					<th>Hours/Week</th>
+					</tr>";
 
-				echo "</table>";
-				$result->close();
-			}
-			else
-			{
-				echo $mysqli->error;
-				echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
+					while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
+					{
+						echo "<tr>";
+						echo "<td>" . $row[ "CRN" ] . "</td>";
+						echo "<td>" . $row[ "sectionNumber" ] . "</td>";
+						echo "<td>" . $row[ "type" ] . "</td>";
+						echo "<td>" . $row[ "days" ] . "</td>";
+						echo "<td>" . convertTime($row[ "startTime" ]) . "</td>";
+						echo "<td>" . convertTime($row[ "endTime" ]) . "</td>";
+						echo "<td>" . $row[ "firstName" ] . " " . $row[ "lastName" ] . "</td>";		
+						echo "<td>" . $row[ "rNumber" ] . "</td>";
+						echo "<td>" . $row[ "hoursPerWeek" ] . "</td>";
+						echo "</tr>";
+					}
+
+					echo "</table></div><p />";
+					$result->close();
+				}
+				else
+				{
+					echo $mysqli->error;
+					echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
+				}
 			}
 		}
 
@@ -128,6 +144,11 @@
 		echo "<div align='center'>Unable to connect to database.</div>";
 ?>
 
-  </div>
+     </div>
+    </td>
+    <td id="bodyTableRight">
+    </td>
+   </tr>
+  </table>
  </body>
 </html>
