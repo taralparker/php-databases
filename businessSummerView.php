@@ -29,12 +29,12 @@ include "databaseSettings.php";
     <?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
 
     <br>
-
-            <!-- Display form for user to choose a new load preference -->
+               <h1><center>How many years would you like to view?</center></h1>
+            <!-- Display form for user to choose years -->
             <form align="center" name="selectYearForm" action="businessSummerQuery.php" method="post">
                 <select name="selectYear">
 
-                    <!-- User can select Fall or Spring as load preference -->
+                    <!-- User can select between 1 and 20 years -->
                     <?php
                     for( $index = 1 ; $index < 21 ; $index++ )
                         echo "<option value='$index' ". ($index  == $_SESSION[ "selectYear" ] ? "selected" : "" ) .">$index</option>";

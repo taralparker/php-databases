@@ -15,7 +15,7 @@ include "databaseSettings.php";
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Update Load Preference</title>
+    <title>Summer Courses</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 </head>
 
@@ -37,10 +37,10 @@ include "databaseSettings.php";
 
     if( !$mysqli->connect_errno )
     {
-        //Get current load Preference
-        $sql = "SELECT courseCode, CONCAT(firstName, ' ', lastName), enrollment, year FROM (((consistsOf join sections using (crn,year)) join taughtBy using (crn,year)) join Instructors using (rNumber)) WHERE year > (2014-5) AND year<=2014 AND (Sections.semester = 'Summer I' OR Sections.semester = 'Summer II')";
+        //Get summer courses from the last n years
+        $sql = "SELECT courseCode, CONCAT(lastName, ', ', firstName), enrollment, year FROM (((consistsOf join sections using (crn,year)) join taughtBy using (crn,year)) join Instructors using (rNumber)) WHERE year > (2014-5) AND year<=2014 AND (Sections.semester = 'Summer I' OR Sections.semester = 'Summer II')";
 
-        //Display current load preference
+        //Display summer courses from the last n years
         if( $result = $mysqli->query( $sql ) )
         {
             echo "<table border='1' id='htmlgrid' class='testgrid'>
@@ -55,7 +55,7 @@ include "databaseSettings.php";
             {
                 echo "<tr>";
                 echo "<td>" . $row[ "courseCode" ] . "</td>";
-                echo "<td>" . $row[ "CONCAT(firstName, ' ', lastName)" ] . "</td>";
+                echo "<td>" . $row[ "CONCAT(lastName, ', ', firstName)" ] . "</td>";
                 echo "<td>" . $row[ "enrollment" ] . "</td>";
                 echo "<td>" . $row[ "year" ] . "</td>";
                 echo "</tr>";
