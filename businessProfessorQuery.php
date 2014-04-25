@@ -144,7 +144,7 @@ include "databaseSettings.php";
         }
 
         //TOTAL UNDERGRAD COURSES TAUGHT
-        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - 20) AND ( courseCode LIKE '4%' OR courseCode LIKE '3%' OR courseCode LIKE '2%' OR courseCode LIKE '1%') GROUP BY Instructors.lastName";
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - $year) AND ( courseCode LIKE '4%' OR courseCode LIKE '3%' OR courseCode LIKE '2%' OR courseCode LIKE '1%') GROUP BY Instructors.lastName";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
@@ -181,7 +181,7 @@ include "databaseSettings.php";
 
 
         //TOTAL GRAD COURSES TAUGHT
-        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - 20) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%') GROUP BY Instructors.lastName";
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - $year) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%') GROUP BY Instructors.lastName";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
