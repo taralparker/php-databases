@@ -76,6 +76,7 @@ include "databaseSettings.php";
             echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
         }
 
+        ?><br><?php
         //TA RATIO FOR GRADUATE COURSES
         $sql = "SELECT CONCAT(lastName, ', ', firstName), (sum(hoursPerWeek)/sum(enrollment)) FROM (((Sections JOIN taughtBy using (CRN, semester, year) JOIN Instructors using (rNumber)) JOIN hasTA using (CRN, semester, year) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) WHERE year >= (2014 - $year) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%') GROUP BY Instructors.lastName";
         //Display query result
@@ -112,6 +113,7 @@ include "databaseSettings.php";
             echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
         }
 
+        ?><br><?php
         //DISTINCT COURSES
         $sql = "SELECT CONCAT(lastName, ', ', firstName), count(distinct courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) WHERE year >= (2014 - $year) GROUP BY lastName";
         //Display query result
@@ -148,6 +150,7 @@ include "databaseSettings.php";
             echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
         }
 
+        ?><br><?php
         //TOTAL UNDERGRAD COURSES TAUGHT
         $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - $year) AND ( courseCode LIKE '4%' OR courseCode LIKE '3%' OR courseCode LIKE '2%' OR courseCode LIKE '1%') GROUP BY Instructors.lastName";
 
@@ -184,7 +187,7 @@ include "databaseSettings.php";
             echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
         }
 
-
+        ?><br><?php
         //TOTAL GRAD COURSES TAUGHT
         $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - $year) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%') GROUP BY Instructors.lastName";
 
