@@ -6,48 +6,56 @@
  * Time: 6:31 PM
  */
 
+//Permission Type
 $pageSessionType = "business";
 include "sessionValidator.php";
-// Include this for global database access variables
-include "databaseSettings.php";
 ?>
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Summer Courses</title>
+    <title>Template</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 </head>
 
 <body>
-<div id="container">
-    <div id="masthead">
-        <div id="logo"></div>
-        <div id="title"></div>
-    </div>
+<table id="bodyTable" align="center">
+    <tr>
+        <td id="bodyTableLeft">
+        </td>
+        <td id="bodyTableMiddle" valign="top">
+            <div id="masthead">
+                <div id="logo"></div>
+                <div id="title"></div>
+            </div>
 
-    <?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
+            <?php include $pageSessionType."Sidebar.html"; ?>
 
-    <br>
-               <h1><center>How many years would you like to view?</center></h1>
-            <!-- Display form for user to choose years -->
-            <form align="center" name="selectYearForm" action="businessSummerQuery.php" method="post">
-                <select name="selectYear">
+            <!-- Page contents -->
+            <div id="content" align="center">
 
-                    <!-- User can select between 1 and 20 years -->
-                    <?php
-                    for( $index = 1 ; $index < 21 ; $index++ )
-                        echo "<option value='$index' ". ($index  == $_SESSION[ "selectYear" ] ? "selected" : "" ) .">$index</option>";
-                    ?>
+                <h1><center>How many years would you like to view?</center></h1>
+                <!-- Display form for user to choose years -->
+                <form align="center" name="selectYearForm" action="businessSummerQuery.php" method="post">
+                    <select name="selectYear">
 
-                </select>
+                        <!-- User can select between 1 and 20 years -->
+                        <?php
+                        for( $index = 1 ; $index < 21 ; $index++ )
+                            echo "<option value='$index' ". ($index  == $_SESSION[ "selectYear" ] ? "selected" : "" ) .">$index</option>";
+                        ?>
 
-                <!-- On submit, businessSummerQuery.php is called to query the database and display the results -->
-                <input type="submit" value="Set">
-            </form>
+                    </select>
 
+                    <!-- On submit, businessSummerQuery.php is called to query the database and display the results -->
+                    <input type="submit" value="Set">
+                </form>
 
-
-</div>
+            </div>
+        </td>
+        <td id="bodyTableRight">
+        </td>
+    </tr>
+</table>
 </body>
 </html>

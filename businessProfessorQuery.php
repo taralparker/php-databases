@@ -6,29 +6,34 @@
  * Time: 9:31 PM
  */
 
+//Permission Type
 $pageSessionType = "business";
 include "sessionValidator.php";
-// Include this for global database access variables
 include "databaseSettings.php";
 ?>
 
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Professor Information</title>
+    <title>Template</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 </head>
 
 <body>
-<div id="container">
-    <div id="masthead">
-        <div id="logo"></div>
-        <div id="title"></div>
-    </div>
+<table id="bodyTable" align="center">
+<tr>
+<td id="bodyTableLeft">
+</td>
+<td id="bodyTableMiddle" valign="top">
+<div id="masthead">
+    <div id="logo"></div>
+    <div id="title"></div>
+</div>
 
-    <?php echo file_get_contents( $pageSessionType."Header.php" ); ?>
+<?php include $pageSessionType."Sidebar.html"; ?>
 
-    <br>
+<!-- Page contents -->
+<div id="content" align="center">
 
     <?php
     //Set year to the user's input value
@@ -43,10 +48,10 @@ include "databaseSettings.php";
         if( $result = $mysqli->query( $sql ) )
         {
             echo "<table border='1' id='htmlgrid' class='testgrid'>
-			<tr>
-			<th>Instructor</th>
-			<th>TA Ratio</th>
-			</tr>";
+                            <tr>
+                            <th>Instructor</th>
+                            <th>TA Ratio</th>
+                            </tr>";
 
             //Display result in a table
             ?>
@@ -77,10 +82,10 @@ include "databaseSettings.php";
         if( $result = $mysqli->query( $sql ) )
         {
             echo "<table border='1' id='htmlgrid' class='testgrid'>
-            <tr>
-            <th>Instructor</th>
-            <th>TA Ratio</th>
-            </tr>";
+                            <tr>
+                            <th>Instructor</th>
+                            <th>TA Ratio</th>
+                            </tr>";
 
             //Display result in a table
             ?>
@@ -113,10 +118,10 @@ include "databaseSettings.php";
         if( $result = $mysqli->query( $sql ) )
         {
             echo "<table border='1' id='htmlgrid' class='testgrid'>
-            <tr>
-            <th>Instructor</th>
-            <th>Courses</th>
-            </tr>";
+                            <tr>
+                            <th>Instructor</th>
+                            <th>Courses</th>
+                            </tr>";
 
             //Display result in a table
             ?>
@@ -150,10 +155,10 @@ include "databaseSettings.php";
         if( $result = $mysqli->query( $sql ) )
         {
             echo "<table border='1' id='htmlgrid' class='testgrid'>
-            <tr>
-            <th>Instructor</th>
-            <th>Courses</th>
-            </tr>";
+                            <tr>
+                            <th>Instructor</th>
+                            <th>Courses</th>
+                            </tr>";
 
             //Display result in a table
             ?>
@@ -187,10 +192,10 @@ include "databaseSettings.php";
         if( $result = $mysqli->query( $sql ) )
         {
             echo "<table border='1' id='htmlgrid' class='testgrid'>
-        <tr>
-        <th>Instructor</th>
-        <th>Courses</th>
-        </tr>";
+                            <tr>
+                            <th>Instructor</th>
+                            <th>Courses</th>
+                            </tr>";
 
             //Display result in a table
             ?>
@@ -207,7 +212,7 @@ include "databaseSettings.php";
 
 
             echo "</table>";
-                $result->close();
+            $result->close();
         }
         //Display an error if there is a database error
         else
@@ -223,8 +228,12 @@ include "databaseSettings.php";
     else
         echo "<div align='center'>Unable to connect to database.</div>";
     ?>
-<br>
-<br>
+
 </div>
+</td>
+<td id="bodyTableRight">
+</td>
+</tr>
+</table>
 </body>
 </html>
