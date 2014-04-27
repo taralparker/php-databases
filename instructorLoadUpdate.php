@@ -14,7 +14,9 @@ include 'databaseSettings.php';
     //Set month to the user's input value
     $month = $_POST['loadPreferenceSemester'];
     //Create SQL query with user's input month and rNumber
-    $sql = "UPDATE Instructors SET loadPreference = '$month' WHERE rNumber = '$_SESSION[rNumber]' ";
+    $sql = "UPDATE Instructors
+            SET loadPreference = '$month'
+            WHERE rNumber = '$_SESSION[rNumber]' ";
 
     //If the update is successful, update page to instructorLoadEdit.php
     if( $result = $mysqli->query( $sql ) ){

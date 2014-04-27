@@ -53,13 +53,13 @@ include "databaseSettings.php";
     {
         //Query all courses taught by selected instructor in the last n years
         $sql = "SELECT courseCode, courseTitle, semester, year, enrollment, bldg
-        FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
-        WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor'
-        ORDER BY year DESC, CASE semester
-          WHEN 'FALL' THEN 1
-          WHEN 'Summer II' THEN 2
-          WHEN 'Summer I' THEN 3
-          WHEN 'SPRING' THEN 4 END, semester";
+                FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor'
+                ORDER BY year DESC, CASE semester
+                  WHEN 'FALL' THEN 1
+                  WHEN 'Summer II' THEN 2
+                  WHEN 'Summer I' THEN 3
+                  WHEN 'SPRING' THEN 4 END, semester";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
@@ -104,8 +104,8 @@ include "databaseSettings.php";
         ?><br><?php
         //Number of distinct courses taught in the last n years
         $sql = "SELECT count(distinct(courseCode))
-        FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
-        WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor'";
+                FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor'";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
@@ -140,10 +140,10 @@ include "databaseSettings.php";
         ?><br><?php
         //ALL DISTINCT UNDERGRADUATE / REQUIRED COURSES
         $sql = "SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))
-        FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
-        WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 1 AND ( courseCode LIKE '1%' OR courseCode LIKE '2%' OR courseCode LIKE '3%' OR courseCode LIKE '4%')
-        GROUP BY courseCode
-        ORDER BY courseCode";
+                FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
+                WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 1 AND ( courseCode LIKE '1%' OR courseCode LIKE '2%' OR courseCode LIKE '3%' OR courseCode LIKE '4%')
+                GROUP BY courseCode
+                ORDER BY courseCode";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
@@ -187,10 +187,10 @@ include "databaseSettings.php";
         //ALL DISTINCT UNDERGRADUATE / NON REQUIRED COURSES
         //Query all courses taught by selected instructor in the last n years
         $sql = "SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))
-        FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
-        WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 0 AND ( courseCode LIKE '1%' OR courseCode LIKE '2%' OR courseCode LIKE '3%' OR courseCode LIKE '4%')
-        GROUP BY courseCode
-        ORDER BY courseCode";
+                FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
+                WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 0 AND ( courseCode LIKE '1%' OR courseCode LIKE '2%' OR courseCode LIKE '3%' OR courseCode LIKE '4%')
+                GROUP BY courseCode
+                ORDER BY courseCode";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
@@ -234,10 +234,10 @@ include "databaseSettings.php";
         //ALL DISTINCT GRADUATE / REQUIRED COURSES
         //Query all courses taught by selected instructor in the last n years
         $sql = "SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))
-        FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
-        WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 1 AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%')
-        GROUP BY courseCode
-        ORDER BY courseCode";
+                FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
+                WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 1 AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%')
+                GROUP BY courseCode
+                ORDER BY courseCode";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
@@ -281,10 +281,10 @@ include "databaseSettings.php";
         //ALL DISTINCT GRADUATE / NON REQUIRED COURSES
         //Query all courses taught by selected instructor in the last n years
         $sql = "SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))
-        FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
-        WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 0 AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%')
-        GROUP BY courseCode
-        ORDER BY courseCode";
+                FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))
+                WHERE year >= (2014 - $year) AND CONCAT(lastName, ', ', firstName) = '$instructor' AND required = 0 AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%')
+                GROUP BY courseCode
+                ORDER BY courseCode";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )

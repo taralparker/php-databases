@@ -42,7 +42,9 @@ include "databaseSettings.php";
                 if( !$mysqli->connect_errno )
                 {
                     //Query to get Instructors
-                    $sql = "SELECT CONCAT(lastName, ', ', firstName) FROM Instructors ORDER BY lastName";
+                    $sql = "SELECT CONCAT(lastName, ', ', firstName)
+                            FROM Instructors
+                            ORDER BY lastName";
 
                     //Create an array of Instructors
                     if( $result = $mysqli->query( $sql ) )

@@ -43,7 +43,11 @@ include "databaseSettings.php";
     if( !$mysqli->connect_errno )
     {
         //TA RATIO FOR UNDERGRADUATE COURSES
-        $sql = "SELECT CONCAT(lastName, ', ', firstName), (sum(hoursPerWeek)/sum(enrollment)) FROM (((Sections JOIN taughtBy using (CRN, semester, year) JOIN Instructors using (rNumber)) JOIN hasTA using (CRN, semester, year) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) WHERE year >= (2014 - $year) AND ( courseCode LIKE '1%' OR courseCode LIKE '2%' OR courseCode LIKE '3%' OR courseCode LIKE '4%') GROUP BY Instructors.lastName";
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), (sum(hoursPerWeek)/sum(enrollment))
+                FROM (((Sections JOIN taughtBy using (CRN, semester, year) JOIN Instructors using (rNumber)) JOIN hasTA using (CRN, semester, year) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year) AND ( courseCode LIKE '1%' OR courseCode LIKE '2%' OR courseCode LIKE '3%' OR courseCode LIKE '4%')
+                GROUP BY Instructors.lastName";
+
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
@@ -55,7 +59,7 @@ include "databaseSettings.php";
 
             //Display result in a table
             ?>
-            <h1><center>TA Ratio for undergraduate courses</center></h1>
+            <h1><center>TA Ratio for Undergraduate Courses</center></h1>
             <?php
             while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
             {
@@ -78,7 +82,11 @@ include "databaseSettings.php";
 
         ?><br><?php
         //TA RATIO FOR GRADUATE COURSES
-        $sql = "SELECT CONCAT(lastName, ', ', firstName), (sum(hoursPerWeek)/sum(enrollment)) FROM (((Sections JOIN taughtBy using (CRN, semester, year) JOIN Instructors using (rNumber)) JOIN hasTA using (CRN, semester, year) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) WHERE year >= (2014 - $year) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%') GROUP BY Instructors.lastName";
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), (sum(hoursPerWeek)/sum(enrollment))
+                FROM (((Sections JOIN taughtBy using (CRN, semester, year) JOIN Instructors using (rNumber)) JOIN hasTA using (CRN, semester, year) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%')
+                GROUP BY Instructors.lastName";
+
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
@@ -90,7 +98,7 @@ include "databaseSettings.php";
 
             //Display result in a table
             ?>
-            <h1><center>TA Ratio for undergraduate courses</center></h1>
+            <h1><center>TA Ratio for Graduate Courses</center></h1>
 
             <?php
             while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
@@ -115,14 +123,18 @@ include "databaseSettings.php";
 
         ?><br><?php
         //DISTINCT COURSES
-        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(distinct courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) WHERE year >= (2014 - $year) GROUP BY lastName";
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(distinct courseCode)
+                FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year)
+                GROUP BY lastName";
+
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
             echo "<table border='1' id='htmlgrid' class='testgrid'>
                             <tr>
                             <th>Instructor</th>
-                            <th>Courses</th>
+                            <th>Distinct Courses</th>
                             </tr>";
 
             //Display result in a table
@@ -151,8 +163,56 @@ include "databaseSettings.php";
         }
 
         ?><br><?php
+        //NEW COURSES
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(distinct courseCode)
+                FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors AS T1 using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year) AND courseCode NOT IN (
+                  SELECT courseCode
+                  FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors AS T2 using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                  WHERE year < (2014 - $year) AND T1.rNumber = T2.rNumber)
+                GROUP BY rNumber
+                ORDER BY T1.lastName";
+
+        //Display query result
+        if( $result = $mysqli->query( $sql ) )
+        {
+            echo "<table border='1' id='htmlgrid' class='testgrid'>
+                            <tr>
+                            <th>Instructor</th>
+                            <th>New Courses</th>
+                            </tr>";
+
+            //Display result in a table
+            ?>
+            <h1><center>New Courses Taught</center></h1>
+
+            <?php
+            while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
+            {
+                echo "<tr>";
+                echo "<td>" . $row[ "CONCAT(lastName, ', ', firstName)" ] . "</td>";
+                echo "<td>" . $row[ "count(distinct courseCode)" ] . "</td>";
+                echo "</tr>";
+            }
+
+
+            echo "</table>";
+            $result->close();
+
+        }
+        //Display an error if there is a database error
+        else
+        {
+            echo $mysqli->error;
+            echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
+        }
+
+        ?><br><?php
         //TOTAL UNDERGRAD COURSES TAUGHT
-        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - $year) AND ( courseCode LIKE '4%' OR courseCode LIKE '3%' OR courseCode LIKE '2%' OR courseCode LIKE '1%') GROUP BY Instructors.lastName";
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode)
+                FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year) AND ( courseCode LIKE '4%' OR courseCode LIKE '3%' OR courseCode LIKE '2%' OR courseCode LIKE '1%')
+                GROUP BY Instructors.lastName";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )
@@ -189,7 +249,10 @@ include "databaseSettings.php";
 
         ?><br><?php
         //TOTAL GRAD COURSES TAUGHT
-        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode) FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))  WHERE year >= (2014 - $year) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%') GROUP BY Instructors.lastName";
+        $sql = "SELECT CONCAT(lastName, ', ', firstName), count(courseCode)
+                FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))
+                WHERE year >= (2014 - $year) AND ( courseCode LIKE '5%' OR courseCode LIKE '6%' OR courseCode LIKE '7%' OR courseCode LIKE '8%')
+                GROUP BY Instructors.lastName";
 
         //Display query result
         if( $result = $mysqli->query( $sql ) )

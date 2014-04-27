@@ -44,7 +44,10 @@ include "databaseSettings.php";
                 if( !$mysqli->connect_errno )
                 {
                     //Get summer courses from the last n years
-                    $sql = "SELECT courseCode, CONCAT(lastName, ', ', firstName), enrollment, year FROM (((consistsOf join sections using (crn,year)) join taughtBy using (crn,year)) join Instructors using (rNumber)) WHERE year >= (2014-$year ) AND year<=2014 AND (Sections.semester = 'Summer I' OR Sections.semester = 'Summer II') ORDER BY courseCode, year";
+                    $sql = "SELECT courseCode, CONCAT(lastName, ', ', firstName), enrollment, year
+                            FROM (((consistsOf join sections using (crn,year)) join taughtBy using (crn,year)) join Instructors using (rNumber))
+                            WHERE year >= (2014-$year ) AND year<=2014 AND (Sections.semester = 'Summer I' OR Sections.semester = 'Summer II')
+                            ORDER BY courseCode, year";
 
                     //Display summer courses from the last n years
                     if( $result = $mysqli->query( $sql ) )

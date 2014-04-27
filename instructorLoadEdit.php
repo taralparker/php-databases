@@ -36,7 +36,10 @@
     if( !$mysqli->connect_errno )
     {
         //Get current load Preference
-        $sql = "SELECT loadPreference, CONCAT(firstName,' ',lastName) from Instructors WHERE rNumber = '$_SESSION[rNumber]'";
+        $sql = "SELECT loadPreference, CONCAT(firstName,' ',lastName)
+                FROM Instructors
+                WHERE rNumber = '$_SESSION[rNumber]'";
+
         //Display current load preference
         if( $result = $mysqli->query( $sql ) )
         {
