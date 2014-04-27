@@ -64,7 +64,7 @@
 		{
 			echo "<form name=\"courseSelectionForm\" action=\"facultyTAEdit.php\" method=\"POST\">
 				<select size=\"7\"name=\"courseSelect[]\" multiple=\"yes\" id=\"courseSelect\" onchange=\"this.form.submit();\">";
-			if( empty( $_POST ) || empty( $_POST[ "courseSelect" ]))
+			if(empty( $_POST ) || empty( $_POST[ "courseSelect" ]))
 			{
 				echo "<option selected=\"selected\">Select a course</option>";
 			}
@@ -87,10 +87,11 @@
 
 		if( !empty( $_POST ) && !empty( $_POST[ "courseSelect" ]))
 		{
+			echo "<table border='1' id='htmlgrid' class='testgrid'>";
 			foreach ($_POST[ "courseSelect" ] as $course)
 			{
 				//echo "<h1><a name=\"$course\" href=\"#$course\" onclick=\"toggle('$course');\">CS $course</a></h1><div class='courseDiv' id='$course'>";
-				echo "<h1>CS $course</h1><div class='courseDiv' id='$course'>";
+				echo "<tr><td colspan=9 style=\"font-weight: bold; font-size:125%; text-align:center;\">CS $course</td></tr>";
 				$sql = "
 				select * from
 				Sections natural left outer join hasTA natural left outer join TAs
@@ -99,7 +100,7 @@
 				where courseCode=$course and year=$year and semester='$semester') and Sections.year=$year and Sections.semester='$semester'";
 				if( $result = $mysqli->query( $sql ) )
 				{
-					echo "<table border='1' id='htmlgrid' class='testgrid'>
+					echo "
 					<tr>
 					<th>CRN</th>
 					<th>Section</th>
@@ -127,15 +128,15 @@
 						echo "</tr>";
 					}
 
-					echo "</table></div><p />";
 					$result->close();
 				}
 				else
 				{
 					echo $mysqli->error;
-					echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
+					echo "<tr><td colspan=9 style=\"background:red;\">Invalid request. Please contact a system administrator.</td></tr>";
 				}
 			}
+			echo "</table>";
 		}
 
 		$mysqli->close();
