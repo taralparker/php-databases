@@ -55,7 +55,7 @@
 		echo "</select>";
 		echo "<input type=\"submit\" value=\"Submit\"></form>";
 		$targetYear = $year - $selectedYear;
-		if($result = $mysqli->query( "select * from (select distinct courseCode from Courses) as A natural left outer join (select distinct courseCode, count(distinct CRN) as numClasses, sum(enrollment) as totalEnrollment from Sections natural join consistsOf where year>$targetYear group by courseCode) as B;" ))
+		if($result = $mysqli->query( "select * from (select distinct courseCode from Courses) as A natural left outer join (select distinct courseCode, count(distinct CRN) as numClasses, sum(enrollment) as totalEnrollment from Sections natural join consistsOf where year>$targetYear and semester in ('Fall', 'Spring') group by courseCode) as B;" ))
 		{
 			echo "<h1>Cumulative enrollment for all classes over the last " . (($selectedYear > 1) ? ($selectedYear . " years") : "year") . "</h1>";
 			echo "<table border='1' id='htmlgrid' class='testgrid'>
@@ -65,25 +65,7 @@
 					</tr>";
 			$level = -1;
 			$totalEnrollment = 0;
-			while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
-			{
-				if($level == -1)
-				{
-					$level = getLevel($row[ "courseCode" ]);
-				}
-				echo "<tr><td>CS " . $row[ "courseCode" ] . "</td>
-				<td>" . (empty($row[ "totalEnrollment" ]) ? "0" : $row[ "totalEnrollment" ]) . "</td></tr>";
-				if($level == getLevel($row[ "courseCode" ]))
-				{
-					$totalEnrollment += $row[ "totalEnrollment" ];
-				}
-				else if($level < 6000)
-				{
-					echo "<tr><th>Total enrollment for all level $level classes:</th><th>$totalEnrollment</th></tr>";
-					$level = getLevel($row[ "courseCode" ]);
-					$totalEnrollment = $row[ "totalEnrollment" ];
-				}
-			}
+			businessRegularView.php
 			echo "</table>";
 			$result->close();
 		}
