@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Created by phpDesigner8
- * Author: Eric
- */
- 
-	// Permission
 	$pageSessionType = "business";
 	include "sessionValidator.php";
 	include "databaseSettings.php";
@@ -14,7 +7,7 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Course View</title>
+  <title>Special View</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
  </head>
 
@@ -34,102 +27,61 @@
      <!-- Page contents -->
      <div id="content" align="center">
 
-<?php
-	$mysqli = new mysqli( $dbproHost , $dbproUsername , $dbproPassword , $dbproSchema );
+      <form method="post">
+       <input type="submit" value="Show">
+       Last
+       <input name="nYears" type="text" size="4" autocomplete="off" value="<?php echo isset( $_POST[ "nYears" ] ) && is_numeric( $_POST[ "nYears" ] ) ? $_POST[ "nYears" ] : 5 ?>">
+       Year(s)
+      </form>
 
-	if( !$mysqli->connect_errno )
+<?php
+	if( isset( $_POST[ "nYears" ] ) && is_numeric( $_POST[ "nYears" ] ) )
 	{
-		if( $result = $mysqli->query( "select distinct courseCode from Courses order by courseCode;"))
+		$mysqli = new mysqli( $dbproHost , $dbproUsername , $dbproPassword , $dbproSchema );
+
+		if( !$mysqli->connect_errno )
 		{
-			$year = isset( $_SESSION[ "demoYear" ] ) ? $_SESSION[ "demoYear" ] : 2014;
-			$semester = isset( $_SESSION[ "demoSemester" ] ) ? $_SESSION[ "demoSemester" ] : "Spring";
-			echo "<form name=\"courseSelectionForm\"action=\"businessCourseView.php\" method=\"POST\">
-				<select size=\"7\"name=\"courseSelect\" id=\"courseSelect\">";
-			if(empty( $_POST ) || empty( $_POST[ "courseSelect" ]) || !is_numeric($_POST[ "courseSelect" ]))
+			$sql = "SELECT courseCode , sectionNumber , firstName , lastName , courseTitle , semester , year , enrollment from Sections NATURAL JOIN consistsOf NATURAL JOIN Courses NATURAL JOIN taughtBy NATURAL JOIN Instructors WHERE ( courseCode = 5331 or courseCode = 5332 ) and year >= " . ( date( "Y" ) - $_POST[ "nYears" ] ) . " ORDER BY courseCode ASC , year DESC , semester DESC;";
+
+			if( $result = $mysqli->query( $sql ) )
 			{
-				echo "<option selected=\"selected\">Select a course</option>";
+				echo "<table border='1' id='htmlgrid' class='testgrid'>
+				<tr>
+				<th>Course Code</th>
+				<th>Section</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Course Title</th>
+				<th>Semester</th>
+				<th>Year</th>
+				<th>Enrollment</th>
+				</tr>";
+
+				while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
+				{
+					echo "<tr>";
+					echo "<td>" . $row[ "courseCode" ] . "</td>";
+					echo "<td>" . $row[ "sectionNumber" ] . "</td>";
+					echo "<td>" . $row[ "firstName" ] . "</td>";
+					echo "<td>" . $row[ "lastName" ] . "</td>";
+					echo "<td>" . $row[ "courseTitle" ] . "</td>";
+					echo "<td>" . $row[ "semester" ] . "</td>";
+					echo "<td>" . $row[ "year" ] . "</td>";
+					echo "<td>" . $row[ "enrollment" ] . "</td>";
+					echo "</tr>";
+				}
+
+				echo "</table>";
+				$result->close();
 			}
 			else
-			{
-				echo "<option>Select a course</option>";
-			}
-			while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
-			{
-				$selected = ($row[ "courseCode" ] == $_POST[ "courseSelect" ]);
-				echo "<option " . ($selected ? "selected=\"selected\"" : "") . "value=\"" . $row[ "courseCode" ] . "\">CS " . $row[ "courseCode" ] . "</option>";
-			}
-			echo "</select>";
+				echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
 
-			echo "<select size=\"7\"name=\"yearSelect\" id=\"yearSelect\">";
-			$selectedYear = "5";
-			if(!empty( $_POST ) && $_POST[ "yearSelect" ])
-			{
-				$selectedYear = $_POST[ "yearSelect" ];
-			}
-			for( $counter = 1; $counter <= 20; $counter++)
-			{
-				$selected1 = ($counter == $selectedYear);
-				echo "<option " . ($selected1 ? "selected=\"selected\"" : "") . "value=\"" . $counter . "\">" . $counter . "</option>";
-			}
-			echo "</select>";
-			echo "<input type=\"submit\" value=\"Submit\"></form>";
-
-			if(!empty( $_POST ) && !empty( $_POST[ "courseSelect" ]))
-			{
-				if(is_numeric($_POST[ "courseSelect" ]))	
-				{
-					echo "<h1>All section information of CS $_POST[courseSelect] in the last " . (($selectedYear > 1) ? ($selectedYear . " years") : "year") . "</h1>";
-					$targetYear = $year - $selectedYear; //calculate the target year to find the sections properly
-					if( $result2 = $mysqli->query( "select catalogYear, firstName, lastName, enrollment, semester, title, year from consistsOf natural join Courses natural join Sections natural join taughtBy natural join Instructors where courseCode=$_POST[courseSelect] and year > $targetYear order by catalogYear desc, semester desc;" ))
-					{
-						echo "<table border='1' id='htmlgrid' class='testgrid'>
-							<tr>
-							<th>Year</th>
-							<th>Semester</th>
-							<th>Section</th>
-                            <th>Title</th>
-							<th>Instructor</th>
-							<th>Enrollment</th>
-							</tr>";
-
-						$currentYear = 1;
-						while( $row2 = $result2->fetch_array( MYSQLI_ASSOC ) )
-						{
-							if($currentYear != $row2[ "catalogYear" ])
-							{
-								$currentYear = $row2[ "catalogYear" ];
-								echo "<tr><th colspan=5 style=\"text-align: center; text-size: 125%; font-weight: bold;\">"
-								. substr($currentYear, 0, 4) . " - " . substr($currentYear, -4) . "</th></tr>";
-							}
-							echo "<tr>";
-							echo "<td>" . $row2[ "year" ] . "</td>
-							<td>" . $row2[ "semester" ] . "</td>
-							<td>" . $row2[ "sectionNumber" ] . "</td>
-                            <td>" . $row2["title" ] . "</td>
-							<td>" . $row2[ "firstName" ] . " " . $row2[ "lastName" ] . "</td>
-							<td>" . $row2[ "enrollment" ] . "</td></tr>";
-						}
-						echo "</table>";
-						$result2->close();
-					}
-					else
-					{
-						echo $mysqli->error;
-						echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
-					}
-				}
-			}
-			$result->close();
+			$mysqli->close();
 		}
 		else
-		{
-			echo $mysqli->error;
-			echo "<div align='center'>Invalid request. Please contact a system administrator.</div>";
-		}
-		$mysqli->close();
+			echo "<div align='center'>Unable to connect to database.</div>";
 	}
-	else
-		echo "<div align='center'>Unable to connect to database.</div>";
 ?>
 
      </div>
@@ -140,3 +92,33 @@
   </table>
  </body>
 </html>
+
+<!-- JavaScript -->
+<script src="js/editablegrid-2.0.1.js"></script>
+
+<script>
+window.onload = function()
+{
+	if( document.getElementById( "htmlgrid" ) )
+	{
+		editableGrid = new EditableGrid( "Special Table" , { editMode: "relative" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "section", datatype: "string", editable: false },
+				{ name: "firstName", datatype: "string", editable: false },
+				{ name: "lastName", datatype: "string", editable: false },
+				{ name: "courseTitle", datatype: "string", editable: false },
+				{ name: "semester", datatype: "string", editable: false },
+				{ name: "year", datatype: "string", editable: false },
+				{ name: "enrollment", datatype: "integer", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "htmlgrid" );
+		editableGrid.renderGrid();
+	}
+}
+</script>

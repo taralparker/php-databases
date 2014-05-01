@@ -1,4 +1,5 @@
 <?php
+	// Change this to "faculty", "instructor", or "business"
 	$pageSessionType = "business";
 	include "sessionValidator.php";
 	include "databaseSettings.php";
@@ -7,7 +8,7 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Regular View</title>
+  <title>Enrollment View</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
  </head>
 
@@ -39,7 +40,7 @@
 	{
 		$year = isset( $_SESSION[ "demoYear" ] ) ? $_SESSION[ "demoYear" ] : 2014;
 		$semester = isset( $_SESSION[ "demoSemester" ] ) ? $_SESSION[ "demoSemester" ] : "Spring";
-		echo "<form name=\"tearSelectionForm\"action=\"businessRegularView.php\" method=\"POST\">
+		echo "<form name=\"tearSelectionForm\"action=\"businessEnrollmentView.php\" method=\"POST\">
 			 <select size=\"7\"name=\"yearSelect\" id=\"yearSelect\">";
 		$selectedYear = "5";
 		if(!empty( $_POST ) && $_POST[ "yearSelect" ])
@@ -54,7 +55,7 @@
 		echo "</select>";
 		echo "<input type=\"submit\" value=\"Submit\"></form>";
 		$targetYear = $year - $selectedYear;
-		if($result = $mysqli->query( "select * from (select distinct courseCode from Courses) as A natural left outer join (select distinct courseCode, count(distinct CRN) as numClasses, sum(enrollment) as totalEnrollment from Sections natural join consistsOf where year>$targetYear and semester in ('Fall', 'Spring') group by courseCode) as B;" ))
+		if($result = $mysqli->query( "select * from (select distinct courseCode from Courses) as A natural left outer join (select distinct courseCode, count(distinct CRN) as numClasses, sum(enrollment) as totalEnrollment from Sections natural join consistsOf where year>$targetYear group by courseCode) as B;" ))
 		{
 			echo "<h1>Cumulative enrollment for all classes over the last " . (($selectedYear > 1) ? ($selectedYear . " years") : "year") . "</h1>";
 			echo "<table border='1' id='htmlgrid' class='testgrid'>
@@ -70,7 +71,9 @@
 				{
 					$level = getLevel($row[ "courseCode" ]);
 				}
-				else if($level == getLevel($row[ "courseCode" ]))
+				echo "<tr><td>CS " . $row[ "courseCode" ] . "</td>
+				<td>" . (empty($row[ "totalEnrollment" ]) ? "0" : $row[ "totalEnrollment" ]) . "</td></tr>";
+				if($level == getLevel($row[ "courseCode" ]))
 				{
 					$totalEnrollment += $row[ "totalEnrollment" ];
 				}
@@ -80,8 +83,6 @@
 					$level = getLevel($row[ "courseCode" ]);
 					$totalEnrollment = $row[ "totalEnrollment" ];
 				}
-				echo "<tr><td>CS " . $row[ "courseCode" ] . "</td>
-				<td>" . (empty($row[ "totalEnrollment" ]) ? "0" : $row[ "totalEnrollment" ]) . "</td></tr>";
 			}
 			echo "</table>";
 			$result->close();

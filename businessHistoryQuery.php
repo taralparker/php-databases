@@ -15,7 +15,7 @@ include "databaseSettings.php";
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Template</title>
+    <title>Professor History</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 </head>
 
@@ -64,7 +64,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='allCoursesTable' class='testgrid'>
                             <tr>
                             <th>Course Code</th>
                             <th>Title</th>
@@ -110,9 +110,9 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' class='testgrid'>
                             <tr>
-                            <th>Number of Distinct Courses taught</th>
+                            <th>Number of Distinct Courses Taught</th>
                             </tr>";
 
             //Display result in a table
@@ -148,7 +148,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='allRequiredUndergradCoursesTable' class='testgrid'>
                             <tr>
                             <th>Course Code</th>
                             <th>Times Repeated</th>
@@ -195,7 +195,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='allNonRequiredUndergradCoursesTable' class='testgrid'>
                             <tr>
                             <th>Course Code</th>
                             <th>Times Repeated</th>
@@ -242,7 +242,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='allRequiredGradCoursesTable' class='testgrid'>
                             <tr>
                             <th>Course Code</th>
                             <th>Times Repeated</th>
@@ -289,7 +289,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='allNonRequiredGradCoursesTable' class='testgrid'>
                             <tr>
                             <th>Course Code</th>
                             <th>Times Repeated</th>
@@ -341,3 +341,108 @@ include "databaseSettings.php";
 </table>
 </body>
 </html>
+
+<!-- JavaScript -->
+<script src="js/editablegrid-2.0.1.js"></script>
+<script src="js/jquery-1.7.2.min.js" ></script>
+
+<script>
+window.onload = function()
+{
+	if( document.getElementById( "allCoursesTable" ) )
+	{
+		editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "title", datatype: "hours", editable: false },
+				{ name: "semester", datatype: "string", editable: false },
+				{ name: "year", datatype: "string", editable: false },
+				{ name: "enrollment", datatype: "string", editable: false },
+				{ name: "building", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "allCoursesTable" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "allRequiredUndergradCoursesTable" ) )
+	{
+		editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "timesRepeated", datatype: "hours", editable: false },
+				{ name: "averageEnrollment", datatype: "string", editable: false },
+				{ name: "averageTAHoursPerWeek", datatype: "string", editable: false },
+				{ name: "ratio", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "allRequiredUndergradCoursesTable" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "allNonRequiredUndergradCoursesTable" ) )
+	{
+		editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "timesRepeated", datatype: "hours", editable: false },
+				{ name: "averageEnrollment", datatype: "string", editable: false },
+				{ name: "averageTAHoursPerWeek", datatype: "string", editable: false },
+				{ name: "ratio", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "allNonRequiredUndergradCoursesTable" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "allRequiredGradCoursesTable" ) )
+	{
+		editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "timesRepeated", datatype: "hours", editable: false },
+				{ name: "averageEnrollment", datatype: "string", editable: false },
+				{ name: "averageTAHoursPerWeek", datatype: "string", editable: false },
+				{ name: "ratio", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "allRequiredGradCoursesTable" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "allNonRequiredGradCoursesTable" ) )
+	{
+		editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "timesRepeated", datatype: "hours", editable: false },
+				{ name: "averageEnrollment", datatype: "string", editable: false },
+				{ name: "averageTAHoursPerWeek", datatype: "string", editable: false },
+				{ name: "ratio", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "allNonRequiredGradCoursesTable" );
+		editableGrid.renderGrid();
+	}
+}
+</script>

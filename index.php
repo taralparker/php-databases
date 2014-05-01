@@ -66,7 +66,7 @@
 			{
 				$pass = hash( "sha256" , $_POST[ "password" ] );
 
-				$sql = "SELECT * FROM accounts WHERE rNumber=$rNum AND password='$pass' LIMIT 1;";
+				$sql = "SELECT * FROM Accounts WHERE rNumber=$rNum AND password='$pass' LIMIT 1;";
 
 				if( $result = $mysqli->query( $sql ) )
 				{

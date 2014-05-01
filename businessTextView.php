@@ -54,17 +54,17 @@
 			}
 			echo "</select>";
 			echo "<input type=\"submit\" value=\"Submit\"></form>";
-			
+
 			if(!empty( $_POST ) && !empty( $_POST[ "courseSelect" ]))
 			{
-				if(is_numeric($_POST[ "courseSelect" ]))	
+				if(is_numeric($_POST[ "courseSelect" ]))
 				{
 					echo "<h1>Textbooks instructors have used for CS" . $_POST[ "courseSelect"] . "</h1>";
 					if( $result = $mysqli->query( "select concat(firstName, \" \", lastName) as name, lastName, firstName, ISBN, bookTitle, author, publisher, edition, year, semester from Sections natural join consistsOf natural join Instructors natural join taughtBy natural join usesBook natural join Textbooks where courseCode=$_POST[courseSelect] order by lastName, firstName, year desc, semester;" ))
 					{
 						$professorName = "";
-						echo "<table border='1' id='htmlgrid' class='testgrid'>";
-					
+						echo "<table border='1' id='textbookTable' class='testgrid'>";
+
 						while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
 						{
 							if($professorName != $row[ "name" ])

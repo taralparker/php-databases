@@ -15,7 +15,7 @@ include "databaseSettings.php";
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Template</title>
+    <title>Professor View</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 </head>
 
@@ -51,7 +51,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='undergradRatio' class='testgrid'>
                             <tr>
                             <th>Instructor</th>
                             <th>TA Ratio</th>
@@ -90,7 +90,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='gradRatio' class='testgrid'>
                             <tr>
                             <th>Instructor</th>
                             <th>TA Ratio</th>
@@ -131,7 +131,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='distinctCourses' class='testgrid'>
                             <tr>
                             <th>Instructor</th>
                             <th>Distinct Courses</th>
@@ -176,7 +176,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='newCourses' class='testgrid'>
                             <tr>
                             <th>Instructor</th>
                             <th>New Courses</th>
@@ -217,7 +217,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='totalUndergrad' class='testgrid'>
                             <tr>
                             <th>Instructor</th>
                             <th>Courses</th>
@@ -257,7 +257,7 @@ include "databaseSettings.php";
         //Display query result
         if( $result = $mysqli->query( $sql ) )
         {
-            echo "<table border='1' id='htmlgrid' class='testgrid'>
+            echo "<table border='1' id='totalGrad' class='testgrid'>
                             <tr>
                             <th>Instructor</th>
                             <th>Courses</th>
@@ -303,3 +303,108 @@ include "databaseSettings.php";
 </table>
 </body>
 </html>
+
+<!-- JavaScript -->
+<script src="js/editablegrid-2.0.1.js"></script>
+<script src="js/jquery-1.7.2.min.js" ></script>
+
+<script>
+window.onload = function()
+{
+	if( document.getElementById( "undergradRatio" ) )
+	{
+		editableGrid = new EditableGrid( "undergradRatio" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "instructor", datatype: "string", editable: false },
+				{ name: "taRatio", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "undergradRatio" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "gradRatio" ) )
+	{
+		editableGrid = new EditableGrid( "gradRatio" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "instructor", datatype: "string", editable: false },
+				{ name: "taRatio", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "gradRatio" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "distinctCourses" ) )
+	{
+		editableGrid = new EditableGrid( "distinctCourses" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "instructor", datatype: "string", editable: false },
+				{ name: "distinctCourses", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "distinctCourses" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "newCourses" ) )
+	{
+		editableGrid = new EditableGrid( "newCourses" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "instructor", datatype: "string", editable: false },
+				{ name: "newCourses", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "newCourses" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "totalUndergrad" ) )
+	{
+		editableGrid = new EditableGrid( "totalUndergrad" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "instructor", datatype: "string", editable: false },
+				{ name: "courses", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "totalUndergrad" );
+		editableGrid.renderGrid();
+	}
+
+	if( document.getElementById( "totalGrad" ) )
+	{
+		editableGrid = new EditableGrid( "totalGrad" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "instructor", datatype: "string", editable: false },
+				{ name: "courses", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "totalGrad" );
+		editableGrid.renderGrid();
+	}
+}
+</script>

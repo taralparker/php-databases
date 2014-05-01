@@ -48,16 +48,16 @@
 			$semester = "Fall";
 
 		$sql = "
-		select courseCode, startTime, endTime, days, room, bldg
-		from sections natural join consistsof
-		where year = $year and semester = '$semester' and CRN in (select CRN from taughtby where rNumber = $_SESSION[rNumber] and year = $year );
+		SELECT courseCode, courseTitle, startTime, endTime, days, room, bldg
+		FROM Sections NATURAL JOIN consistsOf NATURAL JOIN Courses
+		WHERE year = $year and semester = '$semester' and CRN in ( SELECT CRN FROM taughtBy WHERE rNumber = $_SESSION[rNumber] and year = $year );
 		";
 
 		if( $result = $mysqli->query( $sql ) )
 		{
 			echo "<table border='1' id='htmlgrid' class='testgrid'>
-			<tr>
 			<th>Course Code</th>
+			<th>Course Title</th>
 			<th>Start Time</th>
 			<th>End Time</th>
 			<th>Days</th>
@@ -69,6 +69,7 @@
 			{
 				echo "<tr>";
 				echo "<td>" . $row[ "courseCode" ] . "</td>";
+				echo "<td>" . $row[ "courseTitle" ] . "</td>";
 				echo "<td>" . number_format( ( $row[ "startTime" ] >= 1300 ? $row[ "startTime" ] - 1200 : $row[ "startTime" ] ) / 100 , 2 , ':' , '' ) . ( $row[ "startTime" ] < 1200 ? " AM" : " PM" ) . "</td>";
 				echo "<td>" . number_format( ( $row[ "endTime" ] >= 1300 ? $row[ "endTime" ] - 1200 : $row[ "endTime" ] ) / 100 , 2 , ':' , '' ) . ( $row[ "endTime" ] < 1200 ? " AM" : " PM" ) . "</td>";
 				echo "<td>" . $row[ "days" ] . "</td>";
@@ -80,11 +81,11 @@
 			echo "</table>";
 			$result->close();
 		}
-
-		$mysqli->close();
 	}
 	else
 		printf( "Connection failed: %s<br>" , $mysqli->connect_error );
+
+	$mysqli->close();
 ?>
 
      </div>
@@ -103,21 +104,25 @@
 <script>
 window.onload = function()
 {
-	editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
+	if( document.getElementById( "htmlgrid" ) )
+	{
+		editableGrid = new EditableGrid( "Future View" , { editMode: "absolute" } );
 
-	// Build and load the metadata in JS
-	editableGrid.load(
-		{ metadata: [
-			{ name: "courseCode", datatype: "string", editable: false },
-			{ name: "startTime", datatype: "hours", editable: false },
-			{ name: "endTime", datatype: "string", editable: false },
-			{ name: "days", datatype: "string", editable: false },
-			{ name: "room", datatype: "string", editable: false },
-			{ name: "building", datatype: "string", editable: false }
-	] } );
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "courseTitle", datatype: "string", editable: false },
+				{ name: "startTime", datatype: "hours", editable: false },
+				{ name: "endTime", datatype: "string", editable: false },
+				{ name: "days", datatype: "string", editable: false },
+				{ name: "room", datatype: "string", editable: false },
+				{ name: "building", datatype: "string", editable: false }
+		] } );
 
-	// Attach to the HTML table and render
-	editableGrid.attachToHTMLTable( "htmlgrid" );
-	editableGrid.renderGrid();
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "htmlgrid" );
+		editableGrid.renderGrid();
+	}
 }
 </script>

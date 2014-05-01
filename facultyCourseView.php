@@ -32,9 +32,9 @@
 
 	if( !$mysqli->connect_errno )
 	{
-		$year = isset( $_SESSION[ "demoYear" ] ) ? $_SESSION[ "demoYear" ] : 2014;
+		$year = isset( $_SESSION[ "demoYear" ] ) ? $_SESSION[ "demoYear" ] : 2013;
 
-		if( $result = $mysqli->query( "SELECT courseCode , courseTitle FROM courses WHERE catalogYear = '" . $year . ( $year + 1 ) . "';" ) )
+		if( $result = $mysqli->query( "SELECT courseCode , courseTitle FROM Courses WHERE catalogYear = '" . $year . ( $year + 1 ) . "';" ) )
 		{
 			echo "<table border='1' id='htmlgrid' class='testgrid' style='font-size:11px;'>
 			<tr>
@@ -80,17 +80,20 @@
 <script>
 window.onload = function()
 {
-	editableGrid = new EditableGrid( "Future Classes" , { editMode: "absolute" } );
+	if( document.getElementById( "htmlgrid" ) )
+	{
+		editableGrid = new EditableGrid( "Course View" , { editMode: "absolute" } );
 
-	// Build and load the metadata in JS
-	editableGrid.load(
-		{ metadata: [
-			{ name: "courseCode", datatype: "string", editable: false },
-			{ name: "courseTitle", datatype: "string", editable: false }
-	] } );
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "courseTitle", datatype: "string", editable: false }
+		] } );
 
-	// Attach to the HTML table and render
-	editableGrid.attachToHTMLTable( "htmlgrid" );
-	editableGrid.renderGrid();
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "htmlgrid" );
+		editableGrid.renderGrid();
+	}
 }
 </script>

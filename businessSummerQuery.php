@@ -16,7 +16,7 @@ include "databaseSettings.php";
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Template</title>
+    <title>Summer View</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
 </head>
 
@@ -44,8 +44,8 @@ include "databaseSettings.php";
                 if( !$mysqli->connect_errno )
                 {
                     //Get summer courses from the last n years
-                    $sql = "SELECT courseCode, CONCAT(lastName, ', ', firstName), enrollment, year
-                            FROM (((consistsOf join sections using (crn,year)) join taughtBy using (crn,year)) join Instructors using (rNumber))
+                    $sql = "SELECT courseCode, CONCAT(lastName, ', ', firstName), enrollment, Sections.semester, year
+                            FROM (((consistsOf join Sections using (crn,year)) join taughtBy using (crn,year)) join Instructors using (rNumber))
                             WHERE year >= (2014-$year ) AND year<=2014 AND (Sections.semester = 'Summer I' OR Sections.semester = 'Summer II')
                             ORDER BY courseCode, year";
 
@@ -57,6 +57,7 @@ include "databaseSettings.php";
                             <th>Course Code</th>
                             <th>Instructor</th>
                             <th>Enrollment</th>
+                            <th>Semester</th>
                             <th>Year</th>
                             </tr>";
                         //Display result in a table
@@ -66,6 +67,7 @@ include "databaseSettings.php";
                             echo "<td>" . $row[ "courseCode" ] . "</td>";
                             echo "<td>" . $row[ "CONCAT(lastName, ', ', firstName)" ] . "</td>";
                             echo "<td>" . $row[ "enrollment" ] . "</td>";
+                            echo "<td>" . $row[ "semester" ] . "</td>";
                             echo "<td>" . $row[ "year" ] . "</td>";
                             echo "</tr>";
                         }
@@ -96,3 +98,31 @@ include "databaseSettings.php";
 </table>
 </body>
 </html>
+
+<!-- JavaScript -->
+<script src="js/editablegrid-2.0.1.js"></script>
+<script src="js/jquery-1.7.2.min.js" ></script>
+
+<script>
+window.onload = function()
+{
+	if( document.getElementById( "htmlgrid" ) )
+	{
+		editableGrid = new EditableGrid( "htmlgrid" , { editMode: "absolute" } );
+
+		// Build and load the metadata in JS
+		editableGrid.load(
+			{ metadata: [
+				{ name: "courseCode", datatype: "string", editable: false },
+				{ name: "instructor", datatype: "string", editable: false },
+				{ name: "enrollment", datatype: "string", editable: false },
+				{ name: "semester", datatype: "string", editable: false },
+				{ name: "year", datatype: "string", editable: false }
+		] } );
+
+		// Attach to the HTML table and render
+		editableGrid.attachToHTMLTable( "htmlgrid" );
+		editableGrid.renderGrid();
+	}
+}
+</script>

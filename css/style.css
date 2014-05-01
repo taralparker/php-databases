@@ -52,7 +52,6 @@ html, body, div, p, form, input, select, textarea, fieldset {
 	display: inline;
 	margin: 0 10;
 	width: 170px;
-	background: #fff;
 	background: #fff url( "/images/sidebarSeperator.gif" ) repeat-y top right;
 }
 
@@ -164,7 +163,9 @@ body {
 }
 
 #content {
+	overflow: auto;
 	margin-bottom: 10;
+	margin-right: 10;
 }
 
 /*
