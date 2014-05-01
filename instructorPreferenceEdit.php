@@ -42,8 +42,6 @@
 
 		if( !$mysqli->connect_errno )
 		{
-			//$sql = "SELECT courseCode , courseTitle , rating FROM Prefers JOIN Courses WHERE rNumber = " . $_SESSION[ "rNumber" ] . " and catalogYear = " . $_POST[ "fromYear" ] . $_POST[ "toYear" ] . " ORDER BY courseCode ASC;";
-			//$sql = "SELECT courseCode , courseTitle FROM Courses WHERE catalogYear = " . $_POST[ "fromYear" ] . $_POST[ "toYear" ] . ";";
 			$sql = "
 			SELECT c.courseCode , courseTitle , rating , previousRating
 			FROM
@@ -151,10 +149,10 @@ function updateCellValue( editableGrid , rowIndex , columnIndex , oldValue , new
 	if( !oldValue && newValue )
 	{
 		var sql = "INSERT INTO Prefers ( rNumber , courseCode , catalogYear , rating ) VALUES ( " + <?php echo $_SESSION[ "rNumber" ]; ?> + " , " + editableGrid.getRowId( rowIndex ) + " , " + <?php echo $_POST[ "fromYear" ] . $_POST[ "toYear" ] ?> + " , " + newValue + " );";
-		console.log( sql );
+		//console.log( sql );
 
 		var data = doQuery( sql );
-		console.log( data );
+		//console.log( data );
 
 		if( !data.success )
 			editableGrid.setValueAt( rowIndex , columnIndex , oldValue );
@@ -162,10 +160,10 @@ function updateCellValue( editableGrid , rowIndex , columnIndex , oldValue , new
 	else if( oldValue && newValue )
 	{
 		var sql = "UPDATE Prefers SET rating = " + newValue + " WHERE rNumber = " + <?php echo $_SESSION[ "rNumber" ]; ?> + " and courseCode = " + editableGrid.getRowId( rowIndex ) + " and catalogYear = " + <?php echo $_POST[ "fromYear" ] . $_POST[ "toYear" ] ?> + ";";
-		console.log( sql );
+		//console.log( sql );
 
 		var data = doQuery( sql );
-		console.log( data );
+		//console.log( data );
 
 		if( !data.success )
 			editableGrid.setValueAt( rowIndex , columnIndex , oldValue );
@@ -173,10 +171,10 @@ function updateCellValue( editableGrid , rowIndex , columnIndex , oldValue , new
 	else if( oldValue && !newValue )
 	{
 		var sql = "DELETE FROM Prefers WHERE rNumber = " + <?php echo $_SESSION[ "rNumber" ]; ?> + " and courseCode = " + editableGrid.getRowId( rowIndex ) + " and catalogYear = " + <?php echo $_POST[ "fromYear" ] . $_POST[ "toYear" ] ?> + ";";
-		console.log( sql );
+		//console.log( sql );
 
 		var data = doQuery( sql );
-		console.log( data );
+		//console.log( data );
 
 		editableGrid.setValueAt( rowIndex , columnIndex , data.success ? "" : oldValue );
 	}
