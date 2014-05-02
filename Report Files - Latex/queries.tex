@@ -1,0 +1,283 @@
+`\$' denotes user-input or gathered values from system. 
+
+\section{Faculty}
+\begin{enumerate}
+	%1
+	\item 	 A department faculty/staff can login and update the following information.
+	\begin{enumerate}
+		%1a
+		\item	 When there is a new professor / FTI / GPTI joining the department, add the information of the new people into the system. The information including the joining date (which semester of which year, e.g., spring 2013), tenured or untenured, and title (e.g., assistant/associate/full professor). However for FTI/GPTI, we don’t have title or tenure information.\\
+		
+				\texttt{SELECT rNumber, lastName, firstName, title, tenured, joiningSemester, joiningYear\\ 
+						FROM Instructors;}\\
+						
+				\texttt{INSERT INTO Instructors ( rNumber, firstName, lastName, instructorTitle, tenured, joiningSemester, joiningYear, loadPreference) VALUES ( \$rNumber, \$firstName, \$lastName, \$instructorTitle, \$tenured, \$joiningSemester, \$joiningYear, \$loadPreference );}\\
+					
+				Where \texttt{tenured} and \texttt{title} may be null for FTI/GPTI.
+				This query inserts information about new instructors into the Instructor table. An instructor may include/update their load preference later.  
+				
+
+		%1b
+		\item 	 For each semester and every section of an offered course, input who is the instructor, where and when the section is taught, the capacity limit of the section and the enrollment of this class. For example, for CS4354 section 001, time (10am to 10:50am) days (MWF), room (204), building (ENGCTR), capacity (60), and enrollment (35). Note that for a section of a course, there may be more than one
+instructor.\\
+
+				\texttt{INSERT INTO Sections\\
+						VALUES (\$CRN, \$year, \$sectionNumber, \$type, \$semester, \$days, \$startTime, \$endTime, \$enrollment, \$capacity))}\\
+
+				For each section of a course, a department faculty/staff can input the information for the section including CRN, year, section number, type of section, semester, days of the week the section meets, start time and end time of the section, enrollment, and capacity for the class. 
+
+		%1c
+		\item 	For each section of a course, input the TA/Grader name, and hours the TA/Grader will assist this course.\\
+
+				Query to determine the courses to put in the dropdown:\\
+				\texttt{SELECT distinct courseCode\\
+						FROM consistsOf NATURAL JOIN Courses\\
+						WHERE semester = \$semester AND year = \$year\\
+						ORDER BY courseCode;}\\
+
+				Query to fill the table with course information:\\
+				\texttt{SELECT * \\
+						FROM Sections NATURAL LEFT OUTER JOIN hasTA NATURAL LEFT OURTER JOIN TAs\\
+						WHERE Sections.CRN IN (\\
+							\tab SELECT CRN\\
+							\tab FROM consistsOf\\
+							\tab WHERE courseCode = \$course AND year=\$year AND semester=\%semester)\\
+						AND Sections.year=\$year AND Sections.semester=\$semester;}\\
+
+				
+		%1d
+		\item 	The course list of computer science. For each course, there is an attribute of catalog whose value is year. E.g., a course with catalog 2014 means that the course is a course in 2014 catalog.\\
+
+				\texttt{SELECT courseCode , courseTitle \\
+						FROM Courses\\
+						WHERE catalogYear = '" . \$year . ( \$year + 1 ) . "';}\\
+				
+						Return a list of all course codes for a given catalog year, that is requested/entered by the user.  
+			
+	\end{enumerate}
+
+\section{Instructor}
+	%2
+	\item 	A professor can login and do the following tasks
+	\begin{enumerate}
+		
+		%2a
+		\item 	Update her/his preferences of the courses to teach in a given academic year (e.g., Fall 2013 to Summer II 2014). As for the user interface, all courses will be displayed with the professor’s preference value (1-3) for that year (if the preference value is not there yet, use the previous year’s preference values). The professor can edit the values. A preference value of NULL represents that the corresponding course is not preferred by the professor.\\
+
+				\texttt{INSERT INTO preferences\\
+						VALUES (\$rNumber, \$courseCode, \$catalogYear, \$rating)}\\
+						
+						Store preferences for each instructor for each course and the year. 
+		
+		%2b
+		\item 	Update her/his teaching load distribution (only in fall and spring) preference: more load in fall or more load in spring or don’t care\\
+
+				\texttt{UPDATE Instructors\\
+						SET loadPreference = \$loadPreference\\
+						WHERE rNumber = \$rNumber}\\
+						
+						The instructor can update their load preference during the school year.
+		
+		%2c
+		\item 	 Input special request for a given year: course code, title, justification ($<$200 words).\\
+		
+				\texttt{INSERT INTO Requests\\
+						VALUES (\$rNumber, \$courseCode, \$catalogYear, \$justification)}\\	
+						
+		%2d 	
+		\item	For each section of a course assigned to this professor in a given semester, input the text books with the following information: Text Title, Author, Edition, ISBN \#, Publisher. Here we assume the assignment of the given semester is already inside the database. If the course was taught before by this professor, the most recent text information should be displayed as the default text information.\\
+
+				Query to determine the courses an instructor has for the semester:\\
+				\texttt{SELECT distinct courseCode\\
+						FROM consistsOf NATURAL JOIN Courses\\
+						WHERE semester=\$semester AND year=\$year\\
+						ORDER BY courseCode;}\\
+
+				Query to fill the table with textbook information:\\
+				\texttt{SELECT *\\
+						FROM usesBook NATURAL JOIN taughtBy NATURAL JOIN Textbooks NATURAL JOIN consistsOf\\
+						WHERE courseCode=\$row2[courseCode] AND rNumber=\$\_SESSION[rNumber]\\
+						ORDER BY catalogYear desc, semester DESC LIMIT 1;}\\
+
+		%2e
+		\item 	 See the courses assigned to them in the next semester. For each course, display its course code, time, days, room and building.\\
+
+				\texttt{SELECT courseCode, courseTitle, startTime, endTime, days, room, bldg\\
+						FROM Sections NATURAL JOIN consistsOf NATURAL JOIN Courses\\
+						WHERE year = \$year AND semester = '\$semester' AND CRN IN (\\
+							\tab SELECT CRN \\
+							\tab FROM taughtBy \\
+							\tab WHERE rNumber = \$\_SESSION[rNumber] AND year = \$year );}
+						 
+	\end{enumerate}
+
+\section{Business}
+	%3
+	\item 	A business manager can obtain the following information:
+	\begin{enumerate}
+			%3a
+			\item 	 For any given instructor and a number $n$ (normally n=5), list all the courses (course code, title, semester, enrollment, building), in reverse chronicle order, that the instructor has taught in the last $n$ years. 
+			
+			For a given instructor and a number $n$, the manager may also want to know the number of distinct courses with the times a course is repeated, average enrollment of this course, average TA hours (per week) for this course, and the ratio between the average TA hours and the average enrollment of this course. As an example, the information to show is something like: (CS4354, 5, 20, 4, 0.2), (CS5285, 1, 10, 0, 0). The first tuple means that the instructor has taught CS4354 5 times with average enrollment 20, average TA hours 4 (per week). Certainly it helps if you show the information in a table with the meaning of each column (and/or row) given explicitly. The undergraduate courses should be shown before the graduate courses. A clear separation of undergraduate courses from graduate courses is preferred. The required courses should also be made distinguishable from the elective courses.\\
+
+			Query all courses taught by selected instructor in the last n years:\\
+        	\texttt{SELECT courseCode, courseTitle, semester, year, enrollment, bldg\\
+					FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+					WHERE year >= (2014 - \$year) AND CONCAT(lastName, ', ', firstName) = '\$instructor'\\
+					ORDER BY year DESC, CASE semester\\
+					WHEN 'FALL' THEN 1\\
+					WHEN 'Summer II' THEN 2\\
+					WHEN 'Summer I' THEN 3\\
+					WHEN 'SPRING' THEN 4 END, semester";}\\
+					
+			Number of distinct courses taught in the last n years:\\
+        	\texttt{SELECT count(distinct(courseCode))\\
+					FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+					WHERE year >= (2014 - \$year) AND CONCAT(lastName, ', ', firstName) = '\$instructor'";}\\
+					
+					
+			ALL DISTINCT UNDERGRADUATE / REQUIRED COURSES:\\
+        	\texttt{SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))\\
+					FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))\\
+					WHERE year >= (2014 - \$year) AND CONCAT(lastName, ', ', firstName) = '\$instructor' AND required = 1 AND ( courseCode LIKE '1\%' OR courseCode LIKE '2\%' OR courseCode LIKE '3\%' OR courseCode LIKE '4\%')\\
+					GROUP BY courseCode\\
+					ORDER BY courseCode";}\\
+					
+			ALL DISTINCT UNDERGRADUATE / NON REQUIRED COURSES\\
+        	\texttt{SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))\\
+					FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))\\
+					WHERE year >= (2014 - \$year) AND CONCAT(lastName, ', ', firstName) = '\$instructor' AND required = 0 AND ( courseCode LIKE '1\%' OR courseCode LIKE '2\%' OR courseCode LIKE '3\%' OR courseCode LIKE '4\%')\\
+					GROUP BY courseCode\\
+					ORDER BY courseCode";}\\
+					
+			ALL DISTINCT GRADUATE / REQUIRED COURSES\\	
+			\texttt{SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))\\
+					FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))\\
+					WHERE year >= (2014 - \$year) AND CONCAT(lastName, ', ', firstName) = '\$instructor' AND required = 1 AND ( courseCode LIKE '5\%' OR courseCode LIKE '6\%' OR courseCode LIKE '7\%' OR courseCode LIKE '8\%')\\
+					GROUP BY courseCode\\
+					ORDER BY courseCode";}\\
+					
+			ALL DISTINCT GRADUATE / NON REQUIRED COURSES\\
+        	\texttt{SELECT courseCode, count(courseCode), avg(enrollment), avg(hoursPerWeek), (avg(hoursPerWeek))/(avg(enrollment))\\
+					FROM (((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear)) LEFT OUTER JOIN hasTA using (CRN, semester, year))\\
+					WHERE year >= (2014 - \$year) AND CONCAT(lastName, ', ', firstName) = '\$instructor' AND required = 0 AND ( courseCode LIKE '5\%' OR courseCode LIKE '6\%' OR courseCode LIKE '7\%' OR courseCode LIKE '8\%')\\
+					GROUP BY courseCode\\
+					ORDER BY courseCode";}\\
+	
+			%3b
+			\item 	For a given $n$, show a table which contains the following summary information for each professor: the ratio between the total number of TA hours and the total enrollment of all undergraduate courses (and graduate courses respectively) this professor taught in the past $n$ years, the number of all distinct courses and the number of new courses taught in the past $n$ years, the total number of undergrad-
+uate courses (not just distinct ones) in $n$ years and the total number of graduate courses in $n$ years.\\
+
+					TA RATIO FOR UNDERGRADUATE COURSES:\\
+					\texttt{SELECT CONCAT(lastName, ', ', firstName), \\(sum(hoursPerWeek)/sum(enrollment))\\
+							FROM (((Sections JOIN taughtBy using (CRN, semester, year) JOIN Instructors using (rNumber)) JOIN hasTA using (CRN, semester, year) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+							WHERE year >= (2014 - \$year) AND ( courseCode LIKE '1\%' OR courseCode LIKE '2\%' OR courseCode LIKE '3\%' OR courseCode LIKE '4\%')\\
+							GROUP BY Instructors.lastName";}\\
+							
+					TA RATIO FOR GRADUATE COURSES:\\
+			        \texttt{SELECT CONCAT(lastName, ', ', firstName), \\(sum(hoursPerWeek)/sum(enrollment))\\
+						FROM (((Sections JOIN taughtBy using (CRN, semester, year) JOIN Instructors using (rNumber)) JOIN hasTA using (CRN, semester, year) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+						WHERE year >= (2014 - \$year) AND ( courseCode LIKE '5\%' OR courseCode LIKE '6\%' OR courseCode LIKE '7\%' OR courseCode LIKE '8\%')\\
+						GROUP BY Instructors.lastName";}\\
+					
+					DISTINCT COURSES:\\
+					\texttt{SELECT CONCAT(lastName, ', ', firstName), count(distinct courseCode)\\
+						FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+						WHERE year >= (2014 - \$year)\\
+						GROUP BY lastName";}\\
+					
+					NEW COURSES:\\
+					\texttt{SELECT CONCAT(lastName, ', ', firstName), count(distinct courseCode)\\
+						FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors AS T1 using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+						WHERE year >= (2014 - \$year) AND courseCode NOT IN (\\
+							\tab SELECT courseCode\\
+							\tab FROM ((((Sections JOIN taughtBy using \\ \tab (CRN, semester, year))JOIN Instructors AS T2 using (rNumber)) \\ \tab JOIN consistsOf using (CRN, semester, year))JOIN Courses using \\ \tab (courseCode, catalogYear))\\
+						WHERE year < (2014 - \$year) AND T1.rNumber = T2.rNumber)\\
+						GROUP BY rNumber\\
+						ORDER BY T1.lastName";}\\
+						
+					TOTAL UNDERGRAD COURSES TAUGHT:\\
+        			\texttt{SELECT CONCAT(lastName, ', ', firstName), count(courseCode)\\
+							FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+							WHERE year >= (2014 - \$year) AND ( courseCode LIKE '4\%' OR courseCode LIKE '3\%' OR courseCode LIKE '2\%' OR courseCode LIKE '1\%')\\
+							GROUP BY Instructors.lastName";}\\
+							
+					 TOTAL GRAD COURSES TAUGHT:\\
+					\texttt{SELECT CONCAT(lastName, ', ', firstName), count(courseCode)\\
+						FROM ((((Sections JOIN taughtBy using (CRN, semester, year)) JOIN Instructors using (rNumber)) JOIN consistsOf using (CRN, semester, year)) JOIN Courses using (courseCode, catalogYear))\\
+						WHERE year >= (2014 - \$year) AND ( courseCode LIKE '5\%' OR courseCode LIKE '6\%' OR courseCode LIKE '7\%' OR courseCode LIKE '8\%')\\
+						GROUP BY Instructors.lastName";}\\
+							
+							
+			
+			%3c
+			\item 	 Given a number $n$, for each section of a special course (CS5331/CS5332), list its title, instructor, offered date (e.g., fall 2012), and enrollment.\\
+
+					\texttt{SELECT instructorTitle, lastName, firstName, semester, catalogYear, enrollment\\
+							FROM Courses NATURAL JOIN Sections NATURAL JOIN Instructors\\
+							WHERE courseCode = \$courseCode\\
+							AND year >= \$currentYear - \$n;}\\
+							
+							
+			%3d
+			\item 	For any given course and a number $n$, list all of its offerings in the last $n$ years. For each offering, list its section number, instructor, enrollment and date, in reverse chronicle order\\
+	
+					Query to get all the courses:\\
+					\texttt{SELECT distinct courseCode\\
+							FROM Courses\\
+							ORDER BY courseCode;}\\
+
+					Query to get all the course offering information:\\
+					\texttt{SELECT catalogYear, sectionNumber, firstName, lastName, enrollment, semester, year\\
+							FROM consistsOf NATURAL JOIN Courses NATURAL JOIN Sections NATURAL JOIN taughtBy NATURAL JOIN Instructors\\
+							WHERE courseCode=\$\_POST[courseSelect] and year $>$ \$targetYear\\
+							ORDER BY catalogYear DESC, semester DESC;}\\
+							
+			%3e 	
+			\item 	 See the preferences of all professors of any given year.\\
+			
+					\texttt{SELECT DISTINCT rNumber , courseCode , semester , rating\\
+							FROM Prefers NATURAL JOIN consistsOf\\
+							WHERE year = \$year\\
+							ORDER BY rNumber;}\\
+			
+			%3f 
+			\item 	See the text(s) used by a professor for a given course (code). If the professor has taught this course several times, list all texts and their corresponding semester that are used before in reverse chronicle order.\\
+
+					Query to get all the courses:\\
+					\texttt{SELECT distinct courseCode\\
+							FROM Courses\\
+							ORDER BY courseCode;}\\
+
+					Query to get the texbook information:\\
+					\texttt{SELECT concat(firstName, \`` \", lastName) as name, lastName, firstName, ISBN, bookTitle, author, publisher, edition, year, semester\\
+							FROM Sections NATURAL JOIN consistsOf NATURAL JOIN Instructors NATURAL JOIN taughtBy NATURAL JOIN usesBook NATURAL JOIN Textbooks\\
+							WHERE courseCode=\$\_POST[courseSelect]\\
+							ORDER BY lastName, firstName, year DESC, semester;}\\
+							
+			%3g
+			\item 	Given a number $n$, list all summer (I and II) courses with course code, instructor and enrollment in the last $n$ years.\\
+
+					\texttt{SELECT courseCode, CONCAT(lastName, `, ', firstName), enrollment, Sections.semester, year\\
+							FROM (((consistsOf join Sections using (crn,year)) join taughtBy using (CRN,year)) join Instructors using (rNumber))\\
+							WHERE year >= (2014-\$year) AND year<=2014 AND (Sections.semester = `Summer I' OR Sections.semester = `Summer II')\\
+							ORDER BY courseCode, year;}\\
+	
+	
+			%3h
+			\item 	Given a number $n$ , show the following statistics:
+			
+					Query to get the enrollment information:\\
+					\texttt{SELECT * \\
+							FROM\\
+								\tab (SELECT distinct courseCode\\
+								\tab FROM COURSES) AS A\\
+								\tab NATURAL LEFT OUTER JOIN\\
+								\tab (SELECT distinct courseCode, count(distinct CRN) AS numClasses, sum(enrollment) AS totalEnrollment\\
+								\tab FROM Sections NATURAL JOIN consistsOf\\
+								\tab WHERE year $>$ \$targetYear\\
+								\tab GROUP BY courseCode AS B;}\\
+		
+	\end{enumerate}
+
+\end{enumerate}

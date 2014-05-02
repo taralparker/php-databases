@@ -1,0 +1,151 @@
+\documentclass{article}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+
+\begin{document}
+	\begin{center}
+			\LARGE{\textbf{System Description}}
+	\end{center}
+	
+The system records which instructor teaches which course(s) in a given semester with what resources, and to enable users to answer questions about the instructors and courses.	
+
+%Prefers Table	
+
+\section{Home Page}
+ The home page consist of a front and back end. The front end is where the application users interact with the page directly. The back end serves indirectly in support of the front end services.
+	
+	\subsection{Back End}
+	The back end serves indirectly in support of the front end consisting in database settings, session validation and database update applications.
+	
+		\subsubsection{Database Settings}
+		The database settings specifies the host type, username, password, and schema for the database.
+		\begin{algorithm}
+		\caption{Database Settings}
+		\begin{algorithmic}[1]
+				\State\textbf{set} host type
+				\State\textbf{set} host username 
+				\State\textbf{set} host password 
+				\State\textbf{set} host schema
+		\end{algorithmic}		 
+		\end{algorithm}
+		
+		\subsubsection{Session Validator}
+		The session validator checks the rNumber of a user after their login. 
+		\begin{algorithm}
+		\caption{Session Validator}
+		\begin{algorithmic}[1]
+		\State start\_session()\Comment{PHP function creates session or resumes session}
+		\If{rNumber not valid}
+			\State session\_destroy()
+			\State exit()
+		\Else
+			\If{type not valid }
+			\State exit()
+			\EndIf
+		\EndIf
+		\end{algorithmic} 
+		\end{algorithm}
+		
+		%\subsubsection{Update Database}	
+		%We need something here.
+	
+	\subsection{Front End}
+	The front end is where the application users interact with the page directly consisting of login, edit and view applications.
+		
+		\subsubsection{Login}
+		The login is the process by which user access to a page is controlled by identifying and authenticating the user's rNumber and password. 
+		
+		\begin{algorithm}
+			\caption{Login}
+			\begin{algorithmic}[1]
+			\State start\_session()
+			\State \textbf{include} database settings
+			\State \textbf{include} page layout
+			\State \textbf{include} login box
+			\If{rNumber and password}
+				\State \textbf{get} int value of rNumber
+				\If{rNumber $>$ 0}
+				\State start connection between SQL and PHP
+					\If{no connection error}
+					\State \textbf{hash} password
+						\If{correct password and rNumber}
+					 	\State \textbf{set} expiration time for session
+					 		\If{account type == faculty}
+					 		\State \textbf{direct} to faculty home page 
+					 		\ElsIf{account type == instructor}
+					 		\State \textbf{direct} to instructor home page 
+					 		\ElsIf{account type == business}
+					 		\State \textbf{direct} to business home page
+					 		\Else
+					 		\State \textbf{diplay} error message: user has invalid account type
+					 		\EndIf 	
+					 	\Else
+					 	\State \textbf{diplay} error message: invalid rNumber or password
+					 	\EndIf 
+					\Else
+				 	\State \textbf{diplay} error message: invalid request
+				 	\EndIf 
+				\Else
+			 	\State \textbf{diplay} error message: unable to connect to database	
+				\EndIf
+			\Else
+			\State \textbf{diplay} error message: invalid rNumber	
+			\EndIf			
+		\end{algorithmic} 
+		\end{algorithm}
+		
+		\subsubsection{Edit}
+		
+		The edit page is where the user has access to edit the data of the database according to the user's privileges. In the system a template is used to create all the edit pages, in addition each page is customized according to the system necessities. 
+		
+		\begin{algorithm}
+		\caption{Edit}
+			\begin{algorithmic}[1]
+			\State \textbf{set} page type to (faculty$|$instructor) 
+			\State \textbf{include} database settings
+			\State \textbf{include} session validator
+			\State \textbf{include} page layout
+			\State \textbf{open} connection with database
+			\If{No connection error}
+				\If{Data to display}
+				\State \textbf{create} table
+				\EndIf
+				\While{Data to fetch}
+				\State \textbf{display} data in table
+				\EndWhile
+			\Else
+			\State \textbf{display} error message: failure to connect 
+			\EndIf
+			\State \textbf{get} user input data
+			\State \textbf{update} database
+			
+			\end{algorithmic}
+		\end{algorithm}
+		
+		\subsubsection{View}
+		The view page is where the user has access to view the data of the database. In the system, a template is use to create all the view pages. In addition, each page is customized according to the system necessities. 
+		
+		\begin{algorithm}
+		\caption{View}
+			\begin{algorithmic}[1]
+			\State \textbf{set} page type to (faculty$|$business$|$instructor) 
+			\State \textbf{include} database settings
+			\State \textbf{include} session validator
+			\State \textbf{include} page layout
+			\State \textbf{open} connection with database
+			\If{No connection error}
+				\If{Data to display}
+				\State \textbf{create} table
+				\EndIf
+				\While{Data to fetch}
+				\State \textbf{display} data in table
+				\EndWhile
+				\State \textbf{close} connection with database
+			\Else
+			\State error message: failure to connect 
+			\EndIf
+			\end{algorithmic}
+		\end{algorithm}
+
+\end{document}

@@ -1,0 +1,49 @@
+\documentclass[]{report}   
+\usepackage{amsmath} 
+\usepackage{pdfpages}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{float}
+
+\newcommand{\tab}{\hspace*{2em}}
+
+\begin{document}
+
+\title{Title}   
+\author{\makebox[\linewidth][c]{Author 1\tab Author 2\tab Author 3}}         
+
+\maketitle
+
+\begin{abstract}
+	\lipsum[1] 
+\end{abstract}
+
+\tableofcontents
+
+% chapter 1
+\chapter{UML Data Model}    
+\includepdf[landscape]{umldiagram.pdf}
+
+\chapter{Relation Schemas}
+\input{descriptions.tex}		
+                   
+\chapter{SQL Pseudocode}           
+\input{queries.tex}
+        
+\chapter{Design and Pseudocode of the System}  
+\input{design.tex}
+
+\chapter{User Interface Design}              
+\input{userInterface.tex}
+
+\chapter{Contributions}
+\section{Author 1}
+\input{author1Contributions.tex}
+
+\section{Author 2}
+\input{author2Contributions.tex}
+
+\section{Author 3}
+\input{author3Contributions.tex}
+
+\end{document}

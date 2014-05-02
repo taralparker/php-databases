@@ -1,0 +1,318 @@
+%Courses Table
+\section{Courses}
+	Courses(\underline{courseCode}, \underline{catalogYear}, courseTitle, required) 
+		Tuples in the Courses table contain information about a given course during a specific catalog year.
+
+	\subsection{courseCode}
+		PK : int 
+		Four digit numerical identifier for a class that is given at Texas Tech University. This code is used to represent all classes of this type. There may be many sections that share a course code in a given semester. (e.g. 4000)	
+		
+	\subsection{catalogYear}
+		PK : int(4) 
+		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+		
+	\subsection{courseTitle}	
+		: str 
+		The description of the class referred to by this tuple.
+		
+	\subsection{required}
+		: boolean
+		Whether or not this class is required for a degree in Computer Science (e.g. true = required, false = not required).
+	
+	
+%Sections Table
+\section{Sections}
+	Sections(\underline{CRN}, \underline{year}, \underline{semester}, sectionNumber, type, days, startTime, endTime, enrollment, capacity, room, bldg) 
+		Tuples in the Section table contain information for a unique section of a course.
+
+	\subsection{CRN}
+		PK : int  
+		Unique ID for the section in a given year.
+	
+	\subsection{year}
+		PK : int (1920 $<$ x $<$ 3000) 
+		Year the section is being offer.
+		
+	\subsection{semester}
+		PK : enum (Fall/Spring/Summer I/Summer II)
+		Semester the section is being offer.
+	
+	\subsection{sectionNumber}
+	 	: str 
+		The unique number of the section.
+	
+	\subsection{type}
+	 	:str 
+		Teaching method of the section (e.g. online, in-class and lab).   
+	
+	
+	\subsection{days}
+		: str 
+		Days the section meets. (e.g. MWF means the class will meet Monday, Wednesday and Friday)
+	
+	\subsection{startTime}
+		: int (0000 $\leq$ x $<$ 2400)
+		Time the section starts, the use of military time is for data storage efficiency and accuracy. Twelve hour time will be display for the user.
+	
+	\subsection{endTime}
+	 	: int (0000 $\leq$ x $<$ 2400) 
+		Time the section ends, the use of military time is for data storage efficiency and accuracy. 12 hour time will be display for the user.
+	
+	\subsection{enrollment}
+		: int  
+		Number of students enroll in the section.
+	
+	\subsection{capacity}
+		: int
+		Maximum number of students can enroll in the section according to the department. 
+	\subsection{room}
+		: str
+		The room number where the class is going to be located.
+		    	
+	\subsection{bldg}
+		: str
+		The building where the class is going to be located.
+		
+	\subsection{descriptions}
+		: str
+		The title of a special topics or special project course.
+		    
+
+
+%Instructors Table
+\section{Instructors}
+	Instructors(\underline{rNumber}, lastName, firstName, instructorTitle, tenured, joiningSemester, joiningYear, loadPreference) 
+		Tuples in the Instructors table contain information for instructors.
+	
+	\subsection{rNumber}
+		PK: int
+		Unique numerical identifier for students, staff, and professors at Texas Tech University.
+    
+    \subsection{lastName}
+		: str  
+    	The last name of the instructor.
+    
+    \subsection{firstName}
+    	: str 
+    	The first name of the instructor.
+  
+    \subsection{instructorTitle}
+    	: str (Professor/FTI/GPTI/Null)
+    	Title of the instructor.
+    
+    \subsection{tenured}    
+    	: boolean 
+    	Represents if the instructor is tenured or not.
+    
+    \subsection{joiningSemester}
+    	: str (Fall/Spring/Summer I/Summer II) 
+    	The semester in which the instructor joined the college.
+    
+    \subsection{joiningYear}
+    	: int (1920 $<$ x $<$ 3000 )
+    	The year in which the instructor joined the college. Must be greater than 0 and less than 3000.
+    
+    \subsection{loadPreference}
+    	: str (Spring/Fall/NULL)
+    	The semester in which the instructor prefers to teach more. NULL for no preference.
+    	
+    
+%TAs Table
+\section{TAs}
+	TAs(\underline{rNumber}, lastName, firstName)
+		Tuples in the TAs table represent information about a particular teaching assistant.
+
+	\subsection{rNumber}
+		PK : int 
+		Unique numerical identifier for students, staff, and professors at Texas Tech University.
+		
+	\subsection{lastName}
+		: str  
+    	The last name of the teacher assistant.
+    
+    \subsection{firstName}
+    	: str 
+    	The first name of the teacher assistant.
+	
+%Textbooks Table
+\section{Textbooks}
+	Textbooks(\underline{ISBN}, bookTitle, author, publisher, edition) 
+		Tuples in the Textbooks table contain information for books used in a Course
+
+	\subsection{ISBN}
+		PK : big int
+		Unique numerical identifier for textbooks.
+	
+	\subsection{bookTitle}
+		: str 
+		Title of the textbook
+	
+	\subsection{author}
+		: str 
+		Name of the textbook author
+	
+	\subsection{publisher}
+		: str 
+		Publisher of the textbook
+	
+	\subsection{edition}
+		: str 
+		Edition of the Textbook
+
+
+%consistsOf Table
+\section{consistsOf}
+	consistsOf(\underline{CRN}, \underline{semester}, \underline{year}, courseCode, catalogYear) 
+		Tuples in the consistOf table contain information for relation between a course and a section.
+	
+	\subsection{CRN}
+		PK: int 
+		Unique ID for the section in a given year.
+
+	\subsection{semester}
+		PK : enum (Fall/Spring/Summer I/Summer II)
+		Semester the section is being offer.
+	
+	\subsection{year}
+		PK : int (1920 $<$ x $<$ 3000)
+		Year the section is being offer.
+	
+	\subsection{courseCode}
+		: int
+		Four digit numerical identifier for a class that is given at Texas Tech University. This code is used to represent all classes of this type. There may be many sections that share a course code in a given semester. (e.g. 4000)
+	
+	\subsection{catalogYear}
+		PK : int(4) 
+		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+
+
+%taughtBy Table
+\section{taughtBy}
+	taughtBy(\underline{CRN}, \underline{semester}, \underline{year}, \underline{rNumber}) 
+		Tuples in the taughtBy table contain information for relation between instructor and section of a course.
+ 	
+ 	\subsection{CRN}
+		PK: int 
+		Unique ID for the section in a given year.
+		
+	\subsection{semester}
+		PK : enum (Fall/Spring/Summer I/Summer II)
+		Semester the section is being offer.
+	
+	\subsection{year}
+		PK : int (1920 $<$ x $<$ 3000) 
+		year the section is being offer.
+	
+	\subsection{rNumber}
+		PK : int 
+		Unique numerical identifier for students, staff, and professors at Texas Tech University.
+
+
+%HasTA Table
+\section{HasTA}
+	HasTA(\underline{CRN}, \underline{semester}, \underline{year}, \underline{rNumber}, hoursPerWeek) 
+		Tuples in the HasTA table represent a TA being associated with (assisting) a particular section of a course.
+	
+	\subsection{CRN}
+		PK : int 
+		The CRN of the course the TA is assisting (cf. Section).
+	
+	\subsection{semester}
+		PK : enum (Fall/Spring/Summer I/Summer II)
+		Semester the section is being offer.
+			
+	\subsection{year}
+		PK : int 
+		The year of the course the TA is assisting (cf. Section). Since CRN and year are the keys for the Section table, they are sufficient to determine which section of the course is being referred to.
+	
+	\subsection{rNumber}
+		PK : int 
+		Unique numerical identifier for students, staff, and professors at Texas Tech University.
+	
+	\subsection{hoursPerWeek}
+		: real 
+		The number of hours each week the TA is available to help (e.g. 16.5).
+
+
+%usesBook Table
+\section{usesBook}
+	usesBook(\underline{CRN}, \underline{semester}, \underline{year}, \underline{ISBN}) 
+		The usesBook relation gives a description of the textbook that is associated with a given class.
+	
+	\subsection{CRN}
+ 		PK : int 
+ 		is classified as an int due to it being a collection of only numbers associated with one particular class. The CRN will reference the CRN in the relation sections, and it is in this relation due to this one particular class associated with this unique number will then uniquely use a particular textbook.
+	
+	\subsection{semester}
+		PK : enum (Fall/Spring/Summer I/Summer II)
+		Semester the section is being offer.
+		
+	\subsection{year}
+		PK : int 
+		is classified as an int due to it being a collection of only numbers associated with a given school year. The year will reference the year in the relation sections, and its a unique key that depends on the CRN. The year is part of this relation due to it being in link with CRN since a CRN is dependent on the school year that a particular number can 	repeat.
+	
+	\subsection{ISBN}
+ 		PK : big int  
+ 		Unique numerical identifier for textbooks.
+	
+	
+%prefers Table	
+\section{prefers}
+	prefers(\underline{rNumber}, \underline{courseCode}, \underline{catalogYear}, rating) 
+		Tuples in the prefers table contain information for relation between a professor and a course preference.
+	
+	\subsection{rNumber}
+		PK : int 
+		Unique numerical identifier for students, staff, and professors at Texas Tech University.
+	
+	\subsection{courseCode}
+		PK : int
+		Four digit numerical identifier for a class that is given at Texas Tech University. This code is used to represent all classes of this type. There may be many sections that share a course code in a given semester. (e.g. 4000)
+	
+	\subsection{catalogYear}
+		PK : int(4) 
+		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+	
+	\subsection{rating}
+		: int 
+		Numerical ranking of 1, 2, 3, or null. Ranking represents an instructors desire to teach a course. 1 is the most desirable, followed by 2, then 3. A null value represents that an instructor does not wish to teach the course. 
+
+
+%requests Table
+\section{requests}
+	requests(\underline{rNumber}, \underline{courseCode}, \underline{catalogYear}, justification) 
+		Tuples in the requests table contain information for relation between a professor and any special request they might have for a course.
+	
+	\subsection{rNumber}
+		PK : int
+		Unique numerical identifier for students, staff, and professors at Texas Tech University.
+	
+	\subsection{courseCode}
+		PK : int
+		Four digit numerical identifier for a class that is given at Texas Tech University. This code is used to represent all classes of this type. There may be many sections that share a course code in a given semester. (e.g. 4000)
+	
+	\subsection{catalogYear}
+		PK : int(4) 
+		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+	
+	\subsection{justification}
+		: str
+		A variable length comment. Justification is a comment written by an instructor to state their justification for wanting (or not) to teach a specific course. 
+
+
+%Accounts Table
+\section{Accounts}
+	Logins(\underline{rNumber}, password, permissionType) 
+		Holds account information to control viewing and editing databases on the website.
+	
+	\subsection{rNumber}
+		PK : int 
+		Unique numerical identifier for students, staff, and professors at Texas Tech University.
+    
+    \subsection{password}
+    	: char(64)
+    	Used to validate the account.
+    
+    \subsection{permissionType}
+	    : str(Faculty/Instructor/Business) 
+		Determines what the user can view and edit.
