@@ -9,7 +9,7 @@
 		
 	\subsection{catalogYear}
 		PK : int(4) 
-		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+		Eight-digit numerical identifier for a catalog year, consisting of the concatenation of the two calendar years that make up the academic year. (e.g. We represent the academic year of 2014-2015 as 20142015)
 		
 	\subsection{courseTitle}	
 		: str 
@@ -31,11 +31,11 @@
 	
 	\subsection{year}
 		PK : int (1920 $<$ x $<$ 3000) 
-		Year the section is being offer.
+		Year the section is being offered.
 		
 	\subsection{semester}
 		PK : enum (Fall/Spring/Summer I/Summer II)
-		Semester the section is being offer.
+		Semester the section is being offered.
 	
 	\subsection{sectionNumber}
 	 	: str 
@@ -52,19 +52,19 @@
 	
 	\subsection{startTime}
 		: int (0000 $\leq$ x $<$ 2400)
-		Time the section starts, the use of military time is for data storage efficiency and accuracy. Twelve hour time will be display for the user.
+		Time the section starts; the use of military time is for data storage efficiency and accuracy. 12 hour time will be display for the user.
 	
 	\subsection{endTime}
 	 	: int (0000 $\leq$ x $<$ 2400) 
-		Time the section ends, the use of military time is for data storage efficiency and accuracy. 12 hour time will be display for the user.
+		Time the section ends; the use of military time is for data storage efficiency and accuracy. 12 hour time will be display for the user.
 	
 	\subsection{enrollment}
 		: int  
-		Number of students enroll in the section.
+		Number of students enrolled in the section.
 	
 	\subsection{capacity}
 		: int
-		Maximum number of students can enroll in the section according to the department. 
+		Maximum number of students that can enroll in the section according to the department. 
 	\subsection{room}
 		: str
 		The room number where the class is going to be located.
@@ -73,7 +73,7 @@
 		: str
 		The building where the class is going to be located.
 		
-	\subsection{descriptions}
+	\subsection{description}
 		: str
 		The title of a special topics or special project course.
 		    
@@ -90,14 +90,14 @@
     
     \subsection{lastName}
 		: str  
-    	The last name of the instructor.
+    	The instructor's last name.
     
     \subsection{firstName}
     	: str 
-    	The first name of the instructor.
+    	The instructor's first name.
   
     \subsection{instructorTitle}
-    	: str (Professor/FTI/GPTI/Null)
+    	: enum (Professor/FTI/GPTI/Null)
     	Title of the instructor.
     
     \subsection{tenured}    
@@ -105,15 +105,15 @@
     	Represents if the instructor is tenured or not.
     
     \subsection{joiningSemester}
-    	: str (Fall/Spring/Summer I/Summer II) 
+    	: enum (Fall/Spring/Summer I/Summer II) 
     	The semester in which the instructor joined the college.
     
     \subsection{joiningYear}
     	: int (1920 $<$ x $<$ 3000 )
-    	The year in which the instructor joined the college. Must be greater than 0 and less than 3000.
+    	The year in which the instructor joined the college.
     
     \subsection{loadPreference}
-    	: str (Spring/Fall/NULL)
+    	: enum (Spring/Fall/NULL)
     	The semester in which the instructor prefers to teach more. NULL for no preference.
     	
     
@@ -128,16 +128,16 @@
 		
 	\subsection{lastName}
 		: str  
-    	The last name of the teacher assistant.
+    	The TA's last name.
     
     \subsection{firstName}
     	: str 
-    	The first name of the teacher assistant.
+    	The TA's first name.
 	
 %Textbooks Table
 \section{Textbooks}
 	Textbooks(\underline{ISBN}, bookTitle, author, publisher, edition) 
-		Tuples in the Textbooks table contain information for books used in a Course
+		Tuples in the Textbooks table contain information for books used in a Course.
 
 	\subsection{ISBN}
 		PK : big int
@@ -145,25 +145,25 @@
 	
 	\subsection{bookTitle}
 		: str 
-		Title of the textbook
+		Title of the textbook.
 	
 	\subsection{author}
 		: str 
-		Name of the textbook author
+		Name of the textbook's author(s).
 	
 	\subsection{publisher}
 		: str 
-		Publisher of the textbook
+		Publisher of the textbook.
 	
 	\subsection{edition}
 		: str 
-		Edition of the Textbook
+		Edition of the Textbook.
 
 
 %consistsOf Table
 \section{consistsOf}
 	consistsOf(\underline{CRN}, \underline{semester}, \underline{year}, courseCode, catalogYear) 
-		Tuples in the consistOf table contain information for relation between a course and a section.
+		Tuples in the consistOf table contain information about which course each section is an instance of.
 	
 	\subsection{CRN}
 		PK: int 
@@ -171,11 +171,11 @@
 
 	\subsection{semester}
 		PK : enum (Fall/Spring/Summer I/Summer II)
-		Semester the section is being offer.
+		Semester the section is being offered.
 	
 	\subsection{year}
 		PK : int (1920 $<$ x $<$ 3000)
-		Year the section is being offer.
+		Year the section is being offered.
 	
 	\subsection{courseCode}
 		: int
@@ -183,13 +183,13 @@
 	
 	\subsection{catalogYear}
 		PK : int(4) 
-		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+		Eight-digit numerical identifier for a catalog year, consisting of the concatenation of the two calendar years that make up the academic year. (e.g. We represent the academic year of 2014-2015 as 20142015)
 
 
 %taughtBy Table
 \section{taughtBy}
 	taughtBy(\underline{CRN}, \underline{semester}, \underline{year}, \underline{rNumber}) 
-		Tuples in the taughtBy table contain information for relation between instructor and section of a course.
+		Tuples in the taughtBy table contain information for which instructors teach each section.
  	
  	\subsection{CRN}
 		PK: int 
@@ -197,33 +197,33 @@
 		
 	\subsection{semester}
 		PK : enum (Fall/Spring/Summer I/Summer II)
-		Semester the section is being offer.
+		Semester the section is being offered.
 	
 	\subsection{year}
 		PK : int (1920 $<$ x $<$ 3000) 
-		year the section is being offer.
+		Year the section is being offered.
 	
 	\subsection{rNumber}
-		PK : int 
+		PK : int
 		Unique numerical identifier for students, staff, and professors at Texas Tech University.
 
 
 %HasTA Table
 \section{HasTA}
 	HasTA(\underline{CRN}, \underline{semester}, \underline{year}, \underline{rNumber}, hoursPerWeek) 
-		Tuples in the HasTA table represent a TA being associated with (assisting) a particular section of a course.
+		Tuples in the HasTA table represent a TA being assigned to assist a particular section of a course.
 	
 	\subsection{CRN}
 		PK : int 
-		The CRN of the course the TA is assisting (cf. Section).
+		The CRN of the section the TA is assisting.
 	
 	\subsection{semester}
 		PK : enum (Fall/Spring/Summer I/Summer II)
-		Semester the section is being offer.
+		Semester the section is being offered.
 			
 	\subsection{year}
 		PK : int 
-		The year of the course the TA is assisting (cf. Section). Since CRN and year are the keys for the Section table, they are sufficient to determine which section of the course is being referred to.
+		The year in which the section the TA is assisting is being held.
 	
 	\subsection{rNumber}
 		PK : int 
@@ -241,15 +241,15 @@
 	
 	\subsection{CRN}
  		PK : int 
- 		is classified as an int due to it being a collection of only numbers associated with one particular class. The CRN will reference the CRN in the relation sections, and it is in this relation due to this one particular class associated with this unique number will then uniquely use a particular textbook.
+ 		Unique ID for the section in a given year.
 	
 	\subsection{semester}
 		PK : enum (Fall/Spring/Summer I/Summer II)
-		Semester the section is being offer.
+		Semester the section is being offered.
 		
 	\subsection{year}
 		PK : int 
-		is classified as an int due to it being a collection of only numbers associated with a given school year. The year will reference the year in the relation sections, and its a unique key that depends on the CRN. The year is part of this relation due to it being in link with CRN since a CRN is dependent on the school year that a particular number can 	repeat.
+		Year the section is being offered.
 	
 	\subsection{ISBN}
  		PK : big int  
@@ -271,7 +271,7 @@
 	
 	\subsection{catalogYear}
 		PK : int(4) 
-		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+		Eight-digit numerical identifier for a catalog year, consisting of the concatenation of the two calendar years that make up the academic year. (e.g. We represent the academic year of 2014-2015 as 20142015)
 	
 	\subsection{rating}
 		: int 
@@ -281,7 +281,7 @@
 %requests Table
 \section{requests}
 	requests(\underline{rNumber}, \underline{courseCode}, \underline{catalogYear}, justification) 
-		Tuples in the requests table contain information for relation between a professor and any special request they might have for a course.
+		Tuples in the requests table contain information about which instructors prefer which courses in certain years.
 	
 	\subsection{rNumber}
 		PK : int
@@ -293,16 +293,16 @@
 	
 	\subsection{catalogYear}
 		PK : int(4) 
-		Four digit numerical identifier for a catalog year. The first two digits represent the year that the catalog begins in and the final two digits represent the year that the catalog ends in. (e.g. We represent the academic year of 2014-2015 as 1415)
+		Eight-digit numerical identifier for a catalog year, consisting of the concatenation of the two calendar years that make up the academic year. (e.g. We represent the academic year of 2014-2015 as 20142015)
 	
 	\subsection{justification}
 		: str
-		A variable length comment. Justification is a comment written by an instructor to state their justification for wanting (or not) to teach a specific course. 
+		A variable length comment. Justification is a comment written by an instructor to state their reason for wanting (or not) to teach a specific course. 
 
 
 %Accounts Table
 \section{Accounts}
-	Logins(\underline{rNumber}, password, permissionType) 
+	Accounts(\underline{rNumber}, password, permissionType) 
 		Holds account information to control viewing and editing databases on the website.
 	
 	\subsection{rNumber}
@@ -314,5 +314,5 @@
     	Used to validate the account.
     
     \subsection{permissionType}
-	    : str(Faculty/Instructor/Business) 
+	    : enum(Faculty/Instructor/Business) 
 		Determines what the user can view and edit.
