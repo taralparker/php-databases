@@ -85,7 +85,6 @@
 							<td>" . $row[ "edition" ] . "</td></tr>";
 						}
 						echo "</table>";
-						$result->close();
 					}
 					else
 					{
