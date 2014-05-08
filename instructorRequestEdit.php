@@ -35,7 +35,7 @@
 	{
 		$year = isset( $_SESSION[ "demoYear" ] ) ? $_SESSION[ "demoYear" ] : 2014;
 
-        $sql = "SELECT courseCode , catalogYear , justification FROM Requests WHERE rNumber = " . $_SESSION[ "rNumber" ] .  ";";
+        $sql = "SELECT courseCode , catalogYear , justification FROM Requests WHERE rNumber = " . $_SESSION[ "rNumber" ] .  " ORDER BY catalogYear DESC;";
 
 		if( $result = $mysqli->query( $sql ) )
 		{
@@ -119,18 +119,32 @@ function addRequest()
 
 	if( justification.match( /\S+/g ).length < 200 )
 	{
-		var sql = "UPDATE Requests SET justification = '" + mysql_real_escape_string( justification ) + "' WHERE rNumber = " + <?php echo $_SESSION[ "rNumber" ]; ?> + " and courseCode = " + courseCode + " and catalogYear = " + catalogYear + ";";
-		//console.log( sql );
+		var sql = "SELECT rNumber FROM Requests WHERE rNumber = " + <?php echo $_SESSION[ "rNumber" ]; ?> + " and courseCode = " + courseCode + " and catalogYear = " + catalogYear + ";";
+		console.log( sql );
 
 		var data = doQuery( sql );
-		//console.log( data );
+		console.log( data );
 
 		if( data.success )
 		{
 			if( data.affectedRows )
 			{
-				var row = document.getElementById( catalogYear + courseCode );
-				row.cells[ 2 ].innerHTML = justification;
+				var sql = "UPDATE Requests SET justification = '" + mysql_real_escape_string( justification ) + "' WHERE rNumber = " + <?php echo $_SESSION[ "rNumber" ]; ?> + " and courseCode = " + courseCode + " and catalogYear = " + catalogYear + ";";
+				//console.log( sql );
+
+				var data = doQuery( sql );
+				//console.log( data );
+
+				if( data.success )
+				{
+					if( data.affectedRows )
+					{
+						var row = document.getElementById( catalogYear + courseCode );
+						row.cells[ 2 ].innerHTML = justification;
+					}
+				}
+				else
+					alert( data.errorString );
 			}
 			else
 			{
@@ -145,6 +159,7 @@ function addRequest()
 					var table = document.getElementById( "htmlgrid" );
 
 					var row = table.insertRow( -1 );
+					row.id = catalogYear + courseCode;
 					row.insertCell( 0 ).innerHTML = fromYear + "-" + toYear;
 					row.insertCell( 1 ).innerHTML = courseCode;
 					row.insertCell( 2 ).innerHTML = justification;

@@ -64,11 +64,12 @@
 		where semester='$semester' and year=$year
 		order by courseCode;"))
 		{
+			echo "Course Selection";
 			echo "<form name=\"courseSelectionForm\" action=\"facultyTAEdit.php\" method=\"POST\">
 				<select size=\"7\"name=\"courseSelect[]\" multiple=\"yes\" id=\"courseSelect\" onchange=\"this.form.submit();\">";
 			if(empty( $_POST ) || empty( $_POST[ "courseSelect" ]))
 			{
-				echo "<option selected=\"selected\">Select a course</option>";
+				//echo "<option selected=\"selected\">Select a course</option>";
 			}
 			while( $row = $result->fetch_array( MYSQLI_ASSOC ) )
 			{

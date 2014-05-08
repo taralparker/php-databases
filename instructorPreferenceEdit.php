@@ -84,7 +84,7 @@
 					echo "<tr id='$row[courseCode]'>";
 					echo "<td>" . $row[ "courseCode" ] . "</td>";
 					echo "<td>" . $row[ "courseTitle" ] . "</td>";
-					echo "<td>" . $row[ "rating" ] . "</td>";
+					echo "<td>" . ( $row[ "rating" ] == NULL ? "NULL" : $row[ "rating" ] ) . "</td>";
 					echo "<td>" . $row[ "previousRating" ] . "</td>";
 					echo "</tr>";
 				}
@@ -130,7 +130,7 @@ window.onload = function()
 			{ metadata: [
 				{ name: "courseCode", datatype: "string", editable: false },
 				{ name: "courseTitle", datatype: "string", editable: false },
-				{ name: "rating", datatype: "string", editable: true , values: { "NULL" : "" , "1" : "1" , "2" : "2" , "3" : "3" } },
+				{ name: "rating", datatype: "string", editable: true , values: { "NULL" : "NULL" , "1" : "1" , "2" : "2" , "3" : "3" } },
 				{ name: "previousRating", datatype: "string", editable: false }
 		] } );
 
@@ -142,12 +142,17 @@ window.onload = function()
 
 function updateCellValue( editableGrid , rowIndex , columnIndex , oldValue , newValue , row , onResponse )
 {
+	if( oldValue == "NULL" )
+		oldvalue = 0;
+	oldValue -= 0;
+
 	if( newValue == "NULL" )
 		newvalue = 0;
 	newValue -= 0;
 
 	if( !oldValue && newValue )
 	{
+		//console.log( "insert" );
 		var sql = "INSERT INTO Prefers ( rNumber , courseCode , catalogYear , rating ) VALUES ( " + <?php echo $_SESSION[ "rNumber" ]; ?> + " , " + editableGrid.getRowId( rowIndex ) + " , " + <?php echo $_POST[ "fromYear" ] . $_POST[ "toYear" ] ?> + " , " + newValue + " );";
 		//console.log( sql );
 
@@ -159,6 +164,7 @@ function updateCellValue( editableGrid , rowIndex , columnIndex , oldValue , new
 	}
 	else if( oldValue && newValue )
 	{
+		//console.log( "update" );
 		var sql = "UPDATE Prefers SET rating = " + newValue + " WHERE rNumber = " + <?php echo $_SESSION[ "rNumber" ]; ?> + " and courseCode = " + editableGrid.getRowId( rowIndex ) + " and catalogYear = " + <?php echo $_POST[ "fromYear" ] . $_POST[ "toYear" ] ?> + ";";
 		//console.log( sql );
 
@@ -170,13 +176,14 @@ function updateCellValue( editableGrid , rowIndex , columnIndex , oldValue , new
 	}
 	else if( oldValue && !newValue )
 	{
+		//console.log( "delete" );
 		var sql = "DELETE FROM Prefers WHERE rNumber = " + <?php echo $_SESSION[ "rNumber" ]; ?> + " and courseCode = " + editableGrid.getRowId( rowIndex ) + " and catalogYear = " + <?php echo $_POST[ "fromYear" ] . $_POST[ "toYear" ] ?> + ";";
 		//console.log( sql );
 
 		var data = doQuery( sql );
 		//console.log( data );
 
-		editableGrid.setValueAt( rowIndex , columnIndex , data.success ? "" : oldValue );
+		editableGrid.setValueAt( rowIndex , columnIndex , data.success ? "NULL" : oldValue );
 	}
 }
 

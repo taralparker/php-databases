@@ -6,7 +6,7 @@
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Template</title>
+  <title>DBPro</title>
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
  </head>
 
@@ -20,8 +20,6 @@
       <div id="logo"></div>
       <div id="title"></div>
      </div>
-
-<?php include $pageSessionType."Sidebar.html"; ?>
 
      <!-- Page contents -->
      <div id="content" align="center">

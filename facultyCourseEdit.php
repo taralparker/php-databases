@@ -62,8 +62,8 @@
 				<th>Start Time</th>
 				<th>End Time</th>
 				<th>Days</th>
-				<th>Room</th>
 				<th>Building</th>
+				<th>Room</th>
 				<th>Capacity</th>
 				<th>Enrollment</th>
 				</tr>";
@@ -139,10 +139,14 @@ window.onload = function()
 
 	$result = $mysqli->query( $sql );
 
-	echo "'' : ''";
+	//echo "'' : ''";
 
 	if( $result )
 	{
+		$row = $result->fetch_array( MYSQLI_NUM );
+		if( $row )
+			echo "'$row[0]' : '$row[0]'";
+
 		while( $row = $result->fetch_array( MYSQLI_NUM ) )
 			echo " , '$row[0]' : '$row[0]'";
 
